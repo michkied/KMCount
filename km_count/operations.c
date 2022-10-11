@@ -17,6 +17,7 @@ int* translate_into_values(int *values, char *expression, int expressionSize) {
 		for (i2 = 0; i2 < MAXSIZE; i2++) {
 			if (expression[i1] == symbols[i2]) {
 				values[i1] = i2;
+				break;
 			}
 		}
 	}
