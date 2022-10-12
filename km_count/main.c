@@ -4,20 +4,19 @@
 
 int main()
 {
-    char a[] = "12BC";
-    char b[] = "78FD";
+    char a[] = "F2E3F1";
+    char b[] = "F478FA";
 
     int size = sizeof(a) / sizeof(a[0]);
 
-
     int *aVal = malloc(size);
     int *bVal = malloc(size);
+    int *result[MAXLENGTH];
 
     symbols_to_values(a, aVal, size);
     symbols_to_values(b, bVal, size);
 
-    int answer = add(16, size, aVal, bVal);
-    printf("Answer: %i", answer);
+    add(16, size, aVal, bVal, result);
     
     return 0;
 }
