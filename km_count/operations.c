@@ -21,6 +21,15 @@ void symbols_to_values(char *expression, int *values, int size) {
 	}
 }
 
+void values_to_symbols(int* values, char* resultExpression) {
+	int i;
+	for (i = 0; i < MAXLENGTH; i++) {
+		if (values[i]) {
+			resultExpression[i] = symbols[values[i]];
+		}
+	}
+}
+
 void add(int base, int size, int *aVal, int *bVal, int *result) {
 	int carry = 0;
 	int i;
@@ -30,13 +39,13 @@ void add(int base, int size, int *aVal, int *bVal, int *result) {
 		printf("%i + %i + %i =  ", aVal[i - 1], bVal[i - 1], carry);
 
 
-		if (aVal[i - 1] + bVal[i - 1] + carry <= base) {
+		if (aVal[i - 1] + bVal[i - 1] + carry < base) {
 			result[MAXLENGTH - size + i] = aVal[i - 1] + bVal[i - 1] + carry;
 			carry = 0;
 		}
 		else {
 			result[MAXLENGTH - size + i] = aVal[i - 1] + bVal[i - 1] + carry - base;
-			carry++;
+			carry = 1;
 		}
 
 		printf("%i\n", result[MAXLENGTH - size + i]);
@@ -44,8 +53,5 @@ void add(int base, int size, int *aVal, int *bVal, int *result) {
 
 	if (carry) {
 		result[MAXLENGTH - size] = carry;
-	}
-	for (i = MAXLENGTH; i > 0; i--) {
-		printf("%i. %i\n", i - 1, result[i - 1]);
 	}
 }
