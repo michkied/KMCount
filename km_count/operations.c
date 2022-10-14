@@ -98,23 +98,23 @@ void multiply(int base, int size, int* aVal, int* bVal, int* result) {
 	int* powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
 	int i2, i3;
 	for (i = 0; 1; i++) {
-		add(base, MAXLENGTH, buf1, buf1, buf1);
 		if (lVal == minVal(lVal, buf1)) {
 			break;
 		}
-		else {
-			for (i2 = 0; i2 < MAXLENGTH; i2++)
-				powersOf2[i][i2] = buf1[i2];
 
-			add(base, MAXLENGTH, buf2, buf2, buf2);
-			for (i2 = 0; i2 < MAXLENGTH; i2++)
-				powersOfVal[i][i2] = buf2[i2];
-		}
+		add(base, MAXLENGTH, buf1, buf1, buf1);
+
+		for (i2 = 0; i2 < MAXLENGTH; i2++)
+			powersOf2[i][i2] = buf1[i2];
+
+		add(base, MAXLENGTH, buf2, buf2, buf2);
+		for (i2 = 0; i2 < MAXLENGTH; i2++)
+			powersOfVal[i][i2] = buf2[i2];
 	}
 
 	int buf3[MAXLENGTH] = { 0 };
 	int buf4[MAXLENGTH] = { 0 };
-	for (i2 = i-1; i2 > 0; i2--) {
+	for (i2 = i-1; i2 >= 0; i2--) {
 
 		for (i3 = 0; i3 < MAXLENGTH; i3++) {
 			buf1[i3] = powersOf2[i2][i3];
@@ -129,6 +129,10 @@ void multiply(int base, int size, int* aVal, int* bVal, int* result) {
 		if (minVal(buf4, lVal) == buf4) {
 			add(base, MAXLENGTH, buf2, result, result);
 			add(base, MAXLENGTH, buf1, buf3, buf3);
+		}
+
+		if (are_equal(buf4, lVal)) {
+			break;
 		}
 
 		memset(buf4, 0, sizeof(buf4));
