@@ -6,8 +6,8 @@
 
 int main()
 {
-    char a[] = "FFF";
-    char b[] = "EEE";
+    char a[] = "1A";
+    char b[] = "0F";
 
     int size = sizeof(a) / sizeof(a[0]);
 
@@ -23,7 +23,7 @@ int main()
     symbols_to_values(a, aVal, size);
     symbols_to_values(b, bVal, size);
 
-    multiply(16, size, aVal, bVal, result);
+    exponentiate(16, size, aVal, bVal, result);
 
     /*for (i = MAXLENGTH; i > 0; i--) {
         printf("%i. %i\n", i - 1, result[i - 1]);
@@ -31,6 +31,7 @@ int main()
 
     values_to_symbols(result, resultExpression);
 
+    printf("Result: ");
     for (i = 0; i < MAXLENGTH; i++) {
         printf("%c", resultExpression[i]);
     }
