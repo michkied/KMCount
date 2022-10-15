@@ -6,10 +6,11 @@
 
 int main()
 {
-    char a[] = "111111111111";
-    char b[] = "0F0000000000";
+    char a[] = "14";
+    char b[] = "F";
 
-    int size = sizeof(a) / sizeof(a[0]);
+    int aSize = sizeof(a) / sizeof(a[0]);
+    int bSize = sizeof(b) / sizeof(b[0]);
 
     int aVal[MAXLENGTH] = { 0 };
     int bVal[MAXLENGTH] = { 0 };
@@ -20,18 +21,16 @@ int main()
         resultExpression[i] = '0';
     }
 
-    symbols_to_values(a, aVal, size);
-    symbols_to_values(b, bVal, size);
+    symbols_to_values(a, aVal, aSize);
+    symbols_to_values(b, bVal, bSize);
 
-    /*exponentiate(16, size, aVal, bVal, result);*/
-
-    convert_bases(16, 8, aVal);
+    exponentiate(16, aVal, bVal, result);
 
     /*for (i = MAXLENGTH; i > 0; i--) {
         printf("%i. %i\n", i - 1, result[i - 1]);
     }*/
 
-    values_to_symbols(aVal, resultExpression);
+    values_to_symbols(result, resultExpression);
 
     printf("Result: ");
     for (i = 0; i < MAXLENGTH; i++) {
