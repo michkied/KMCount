@@ -6,3 +6,5 @@
 void symbols_to_values(char*, int*, int);
 
 void values_to_symbols(int*, char*);
+
+void convert_bases(int, int, int*);
