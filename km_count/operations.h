@@ -12,3 +12,5 @@ void multiply(int, int*, int*, int*);
 void exponentiate(int, int*, int*, int*);
 
 void subtract(int, int*, int*, int*);
+
+void divide(int, int*, int*, int*);

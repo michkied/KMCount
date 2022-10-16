@@ -55,7 +55,6 @@ void add(int base, int *aVal, int *bVal, int *result) {
 	int i;
 
 	for (i = MAXLENGTH-1; i > 0; i--) {
-
 		if (aVal[i] + bVal[i] + carry < base) {
 			result[i] = aVal[i] + bVal[i] + carry;
 			carry = 0;
@@ -243,3 +242,76 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 	}
 }
 
+void divide(int base, int* aVal, int* bVal, int* result) {
+
+
+	// Finished here
+
+
+	int buf1[MAXLENGTH] = { 0 };
+	buf1[MAXLENGTH - 1] = 1;
+	int i;
+	if (are_equal(buf1, bVal)) {
+		for (i = 0; i < MAXLENGTH; i++) {
+			result[i] = aVal[i];
+		}
+		return;
+	}
+
+	int buf2[MAXLENGTH] = { 0 };
+	for (i = 0; i < MAXLENGTH; i++) {
+		buf2[i] = bVal[i];
+	}
+
+	int* powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int* powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int i2, i3;
+	for (i = 0; 1; i++) {
+		if (aVal == minVal(aVal, buf2)) {
+			break;
+		}
+
+		add(base, buf1, buf1, buf1);
+
+		for (i2 = 0; i2 < MAXLENGTH; i2++)
+			powersOf2[i][i2] = buf1[i2];
+
+		add(base, buf2, buf2, buf2);
+		for (i2 = 0; i2 < MAXLENGTH; i2++)
+			powersOfVal[i][i2] = buf2[i2];
+	}
+
+
+
+
+	int buf3[MAXLENGTH] = { 0 };
+	int buf4[MAXLENGTH] = { 0 };
+	int resultBuf[MAXLENGTH] = { 0 };
+	for (i2 = i - 1; i2 >= 0; i2--) {
+
+		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+			buf1[i3] = powersOf2[i2][i3];
+		}
+
+		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+			buf2[i3] = powersOfVal[i2][i3];
+		}
+
+		add(base, buf2, buf3, buf4);
+
+		if (minVal(buf4, aVal) == buf4) {
+			add(base, buf1, resultBuf, resultBuf);
+			add(base, buf2, buf3, buf3);
+		}
+
+		if (are_equal(buf4, aVal)) {
+			break;
+		}
+
+		memset(buf4, 0, sizeof(buf4));
+	}
+
+	for (i = 0; i < MAXLENGTH; i++) {
+		result[i] = resultBuf[i];
+	}
+}
