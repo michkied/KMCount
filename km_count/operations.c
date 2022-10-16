@@ -54,14 +54,14 @@ void add(int base, int *aVal, int *bVal, int *result) {
 	int carry = 0;
 	int i;
 
-	for (i = 1; i <= MAXLENGTH; i++) {
+	for (i = MAXLENGTH-1; i > 0; i--) {
 
-		if (aVal[MAXLENGTH - i] + bVal[MAXLENGTH - i] + carry < base) {
-			result[MAXLENGTH - i] = aVal[MAXLENGTH - i] + bVal[MAXLENGTH - i] + carry;
+		if (aVal[i] + bVal[i] + carry < base) {
+			result[i] = aVal[i] + bVal[i] + carry;
 			carry = 0;
 		}
 		else {
-			result[MAXLENGTH - i] = aVal[MAXLENGTH - i] + bVal[MAXLENGTH - i] + carry - base;
+			result[i] = aVal[i] + bVal[i] + carry - base;
 			carry = 1;
 		}
 	}
