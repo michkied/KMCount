@@ -226,3 +226,15 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 	printf("\nMade %i additions\n\n", add_num);
 }
+
+void subtract(int base, int* aVal, int* bVal, int* result) {
+	int i;
+	for (i = MAXLENGTH - 1; i > 0; i--) {
+		if (aVal[i] < bVal[i]) {
+			aVal[i - 1]--;
+			aVal[i] += base;
+		}
+		result[i] = aVal[i] - bVal[i];
+	}
+}
+

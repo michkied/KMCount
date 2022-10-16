@@ -6,8 +6,8 @@
 
 int main()
 {
-    char a[] = "14";
-    char b[] = "F";
+    char a[] = "1267356";
+    char b[] = "78671";
 
     int aSize = sizeof(a) / sizeof(a[0]);
     int bSize = sizeof(b) / sizeof(b[0]);
@@ -24,7 +24,7 @@ int main()
     symbols_to_values(a, aVal, aSize);
     symbols_to_values(b, bVal, bSize);
 
-    exponentiate(16, aVal, bVal, result);
+    subtract(10, aVal, bVal, result);
 
     /*for (i = MAXLENGTH; i > 0; i--) {
         printf("%i. %i\n", i - 1, result[i - 1]);
