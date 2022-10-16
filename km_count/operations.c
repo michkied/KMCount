@@ -229,12 +229,17 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 void subtract(int base, int* aVal, int* bVal, int* result) {
 	int i;
+	int buf[MAXLENGTH] = { 0 };
+	for (i = 0; i < MAXLENGTH; i++) {
+		buf[i] = aVal[i];
+	}
+
 	for (i = MAXLENGTH - 1; i > 0; i--) {
-		if (aVal[i] < bVal[i]) {
-			aVal[i - 1]--;
-			aVal[i] += base;
+		if (buf[i] < bVal[i]) {
+			buf[i - 1]--;
+			buf[i] += base;
 		}
-		result[i] = aVal[i] - bVal[i];
+		result[i] = buf[i] - bVal[i];
 	}
 }
 
