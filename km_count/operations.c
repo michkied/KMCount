@@ -311,3 +311,9 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		result[i] = resultBuf[i];
 	}
 }
+
+void mod(int base, int* aVal, int* bVal, int* result) {
+	divide(base, aVal, bVal, result);
+	multiply(base, result, bVal, result);
+	subtract(base, aVal, result, result);
+}
