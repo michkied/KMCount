@@ -95,8 +95,13 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 
 	int *powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
 	int *powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+	powersOf2[0][MAXLENGTH - 1] = 1;
+	for (i = 0; i < MAXLENGTH; i++) {
+		powersOfVal[0][i] = buf2[i];
+	}
+
 	int i2, i3;
-	for (i = 0; 1; i++) {
+	for (i = 1; 1; i++) {
 		if (lVal == minVal(lVal, buf1)) {
 			break;
 		}
@@ -136,10 +141,6 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 		}
 
 		memset(buf4, 0, sizeof(buf4));
-	}
-
-	if (!are_equal(lVal, buf3)) {
-		add(base, hVal, resultBuf, resultBuf);
 	}
 
 	for (i = 0; i < MAXLENGTH; i++) {
@@ -222,8 +223,6 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 	for (i = 0; i < MAXLENGTH; i++) {
 		result[i] = resultBuf[i];
 	}
-
-	printf("\nMade %i additions\n\n", add_num);
 }
 
 void subtract(int base, int* aVal, int* bVal, int* result) {
@@ -243,11 +242,6 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 }
 
 void divide(int base, int* aVal, int* bVal, int* result) {
-
-
-	// Finished here
-
-
 	int buf1[MAXLENGTH] = { 0 };
 	buf1[MAXLENGTH - 1] = 1;
 	int i;
@@ -265,8 +259,13 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 
 	int* powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
 	int* powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+	powersOf2[0][MAXLENGTH - 1] = 1;
+	for (i = 0; i < MAXLENGTH; i++) {
+		powersOfVal[0][i] = buf2[i];
+	}
+
 	int i2, i3;
-	for (i = 0; 1; i++) {
+	for (i = 1; 1; i++) {
 		if (aVal == minVal(aVal, buf2)) {
 			break;
 		}
@@ -280,9 +279,6 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		for (i2 = 0; i2 < MAXLENGTH; i2++)
 			powersOfVal[i][i2] = buf2[i2];
 	}
-
-
-
 
 	int buf3[MAXLENGTH] = { 0 };
 	int buf4[MAXLENGTH] = { 0 };

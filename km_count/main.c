@@ -6,8 +6,8 @@
 
 int main()
 {
-    char a[] = "E2FB";
-    char b[] = "7EBB";
+    char a[] = "AAFBCCD99";
+    char b[] = "4566FF";
 
     int aSize = sizeof(a) / sizeof(a[0]);
     int bSize = sizeof(b) / sizeof(b[0]);
