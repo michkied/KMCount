@@ -5,6 +5,7 @@
 
 int add_num = 0;
 
+
 int* minVal(int* aVal, int* bVal) {
 	int i;
 	for (i = 0; i < MAXLENGTH; i++) {
@@ -20,6 +21,7 @@ int* minVal(int* aVal, int* bVal) {
 	}
 	return aVal;
 }
+
 
 int* maxVal(int* aVal, int* bVal) {
 	int i;
@@ -37,6 +39,7 @@ int* maxVal(int* aVal, int* bVal) {
 	return aVal;
 }
 
+
 int are_equal(int* aVal, int* bVal) {
 	int i;
 	for (i = MAXLENGTH-1; i > 0; i--) {
@@ -49,6 +52,7 @@ int are_equal(int* aVal, int* bVal) {
 	}
 	return 1;
 }
+
 
 void add(int base, int *aVal, int *bVal, int *result) {
 	int carry = 0;
@@ -69,6 +73,7 @@ void add(int base, int *aVal, int *bVal, int *result) {
 	}
 	add_num++;
 }
+
 
 void multiply(int base, int* aVal, int* bVal, int* result) {
 	int *lVal = minVal(aVal, bVal);
@@ -148,6 +153,7 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 	}
 }
 
+
 void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 	int buf1[MAXLENGTH] = { 0 };
@@ -225,6 +231,7 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 	}
 }
 
+
 void subtract(int base, int* aVal, int* bVal, int* result) {
 	int i;
 	int buf[MAXLENGTH] = { 0 };
@@ -240,6 +247,7 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 		result[i] = buf[i] - bVal[i];
 	}
 }
+
 
 void divide(int base, int* aVal, int* bVal, int* result) {
 	int buf1[MAXLENGTH] = { 0 };
@@ -311,6 +319,7 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		result[i] = resultBuf[i];
 	}
 }
+
 
 void mod(int base, int* aVal, int* bVal, int* result) {
 	divide(base, aVal, bVal, result);
