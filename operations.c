@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "operations.h"
 #include "conversions.h"
@@ -104,8 +105,8 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 		buf2[i] = hVal[i];
 	}
 
-	int *powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
-	int *powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
 	powersOf2[0][MAXLENGTH - 1] = 1;
 	for (i = 0; i < MAXLENGTH; i++) {
 		powersOfVal[0][i] = buf2[i];
@@ -182,8 +183,8 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 		buf2[i] = aVal[i];
 	}
 
-	int* powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
-	int* powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
 	int i2, i3;
 	for (i = 0; 1; i++) {
 		if (bVal == minVal(bVal, buf1)) {
@@ -240,7 +241,7 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 void subtract(int base, int* aVal, int* bVal, int* result) {
 
-	if (minVal(aVal, bVal) == bVal) {
+	if (minVal(bVal, aVal) == aVal) {
 		printf("\nERROR 211: Subtraction argument error\n");
 		exit(1);
 	}
@@ -269,7 +270,7 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		exit(1);
 	}
 
-	if (minVal(aVal, bVal) == bVal) {
+	if (minVal(aVal, bVal) == aVal) {
 		printf("\nERROR 221: Division argument error\n");
 		exit(1);
 	}
@@ -288,8 +289,8 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		buf2[i] = bVal[i];
 	}
 
-	int* powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
-	int* powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
+	int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
 	powersOf2[0][MAXLENGTH - 1] = 1;
 	for (i = 0; i < MAXLENGTH; i++) {
 		powersOfVal[0][i] = buf2[i];
@@ -352,7 +353,7 @@ void mod(int base, int* aVal, int* bVal, int* result) {
 		exit(1);
 	}
 
-	if (minVal(aVal, bVal) == bVal) {
+	if (minVal(aVal, bVal) == aVal) {
 		printf("\nERROR 231: Modulo argument error\n");
 		exit(1);
 	}

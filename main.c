@@ -6,7 +6,7 @@
 int main()
 {
     char a[] = "99999";
-    char b[] = "0";
+    char b[] = "9";
 
     int aSize = sizeof(a) / sizeof(a[0]);
     int bSize = sizeof(b) / sizeof(b[0]);
@@ -23,7 +23,7 @@ int main()
     symbols_to_values(a, aVal, aSize);
     symbols_to_values(b, bVal, bSize);
 
-    mod(10, aVal, bVal, result);
+    multiply(10, aVal, bVal, result);
 
     values_to_symbols(result, resultExpression);
 
