@@ -55,6 +55,12 @@ int are_equal(int* aVal, int* bVal) {
 
 
 void add(int base, int *aVal, int *bVal, int *result) {
+
+	if (aVal[0] + bVal[0] >= base) {
+		printf("\nERROR 200: Overflow (MAX %i)\n", MAXLENGTH);
+		exit(1);
+	}
+
 	int carry = 0;
 	int i;
 
@@ -233,6 +239,12 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 
 void subtract(int base, int* aVal, int* bVal, int* result) {
+
+	if (minVal(aVal, bVal) == bVal) {
+		printf("\nERROR 211: Subtraction argument error\n");
+		exit(1);
+	}
+
 	int i;
 	int buf[MAXLENGTH] = { 0 };
 	for (i = 0; i < MAXLENGTH; i++) {
@@ -250,7 +262,18 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 
 
 void divide(int base, int* aVal, int* bVal, int* result) {
+
 	int buf1[MAXLENGTH] = { 0 };
+	if (are_equal(buf1, bVal)) {
+		printf("\nERROR 220: Division by zero\n");
+		exit(1);
+	}
+
+	if (minVal(aVal, bVal) == bVal) {
+		printf("\nERROR 221: Division argument error\n");
+		exit(1);
+	}
+
 	buf1[MAXLENGTH - 1] = 1;
 	int i;
 	if (are_equal(buf1, bVal)) {
@@ -322,6 +345,18 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 
 
 void mod(int base, int* aVal, int* bVal, int* result) {
+
+	int buf1[MAXLENGTH] = { 0 };
+	if (are_equal(buf1, bVal)) {
+		printf("\nERROR 230: Modulo by zero\n");
+		exit(1);
+	}
+
+	if (minVal(aVal, bVal) == bVal) {
+		printf("\nERROR 231: Modulo argument error\n");
+		exit(1);
+	}
+
 	divide(base, aVal, bVal, result);
 	multiply(base, result, bVal, result);
 	subtract(base, aVal, result, result);
