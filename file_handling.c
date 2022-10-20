@@ -17,48 +17,6 @@ int is_digit(char character) {
     return 0;
 }
 
-int get_target_base(char* buf, int lineNum) {
-    int i2 = 0;
-    int targetBase = buf[i2] - '0';
-    i2++;
-
-    while (buf[i2] != ' ') {
-        targetBase *= 10;
-        targetBase += buf[i2] - '0';
-        i2++;
-    }
-
-    if (targetBase > MAXBASE || targetBase <= 1) {
-        printf("ERROR 123: Invalid target base (line #%i)", lineNum+1);
-        exit(1);
-    }
-
-    return targetBase;
-}
-
-int get_operation_base(char* buf, int lineNum, int separatorPosition) {
-    int i = separatorPosition+1;
-    int operationBase = buf[i] - '0';
-    i++;
-
-    while (buf[i] != '\n') {
-        if (!is_digit(buf[i])) {
-            printf("ERROR 121: Invalid operation base (line #%i)", lineNum+1);
-            exit(1);
-        }
-
-        operationBase *= 10;
-        operationBase += buf[i] - '0';
-        i++;
-    }
-
-    if (operationBase > MAXBASE || operationBase <= 1) {
-        printf("ERROR 121: Invalid operation base (line #%i)", lineNum+1);
-        exit(1);
-    }
-
-    return operationBase;
-}
 
 void get_header(char* buf, int lineNum, char* operationType, int* operationBase, int* targetBase) {
     int i = 0;
@@ -76,11 +34,23 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
         exit(1);
     }
 
-    int separatorPosition = i;
-    *operationBase = get_operation_base(buf, lineNum, separatorPosition);
+    int opB;
+    char opT[MAXLENGTH];
+    memset(opT, '_', sizeof(opT));
+    sscanf(buf, "%s%i", opT, &opB);
+    printf("%s\n%i\n\n", opT, opB);
 
-    if (is_digit(buf[0])) {
-        *targetBase = get_target_base(buf, lineNum);
+    if (opB > MAXBASE || opB <= 1) {
+        printf("ERROR 121: Invalid operation base (line #%i)", lineNum+1);
+        exit(1);
+    }
+    *operationBase = opB;
+
+    for (i = 0; is_digit(opT[i]); i++) {
+        *targetBase *= 10;
+        *targetBase += opT[i] - '0';
+    }
+    if (*targetBase) {
         *operationType = 'b';
         return;
     }
@@ -117,7 +87,7 @@ char get_operation(FILE *fp, int startFromLine) {
 
         int operationBase;
         char operationType;
-        int targetBase;
+        int targetBase = 0;
 
         if (lineNum == startFromLine) {
             get_header(buf, lineNum, &operationType, &operationBase, &targetBase);
