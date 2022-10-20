@@ -28,11 +28,15 @@ int main()
     char resultExpression[MAXLENGTH];
     memset(resultExpression, '0', sizeof(resultExpression));
 
+    int i;
     while (1) {
         opType = get_operation(fp, startFromLine, &base, aVal, bVal);
 
         if (opType == 'b') {
             convert_bases(base, bVal[0], aVal);
+            for (i = 0; i < MAXLENGTH; i++) {
+                result[i] = aVal[i];
+            }
         }
 
         if (opType == '+') {
@@ -65,7 +69,6 @@ int main()
     values_to_symbols(result, resultExpression);
 
     printf("Result: ");
-    int i;
     for (i = 0; i < MAXLENGTH; i++) {
         printf("%c", resultExpression[i]);
     }
