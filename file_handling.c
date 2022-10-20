@@ -40,7 +40,7 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     sscanf(buf, "%s%i", opT, &opB);
 
     if (opB > MAXBASE || opB <= 1) {
-        printf("ERROR 121: Invalid operation base (line #%i)", lineNum+1);
+        printf("ERROR 121: Invalid operation base - %i (line #%i)", opB, lineNum+1);
         exit(1);
     }
     *operationBase = opB;
@@ -48,13 +48,13 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     for (i = 0; is_digit(opT[i]); i++) {
         *targetBase *= 10;
         *targetBase += opT[i] - '0';
+        *operationType = 'b';
     }
-    if (*targetBase) {
+    if (*operationType == 'b') {
         if (*targetBase > MAXBASE || *targetBase <= 1) {
-            printf("ERROR 123: Invalid target base (line #%i)", lineNum+1);
+            printf("ERROR 123: Invalid target base - %i (line #%i)", *targetBase, lineNum+1);
             exit(1);
         }
-        *operationType = 'b';
         return;
     }
 
@@ -106,10 +106,9 @@ char get_operation(FILE *fp, int startFromLine, int *operationBase, int *aVal, i
                 aVal[i2] = value;
                 i2--;
             }
-        }
-
-        if (operationType == 'b') {
-            return operationType;
+            if (operationType == 'b') {
+                return operationType;
+            }
         }
 
         i2 = MAXLENGTH-1;
