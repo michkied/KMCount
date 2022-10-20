@@ -1,8 +1,8 @@
 #define MAXBASE 16
 #define MAXLENGTH 40
-#define MAXPOWOF2 MAXLENGTH*2  // mnoønik to podzielony na pÛ≥ log2(MAXBASE) - w tym przypadku (log2(16))/2 = 2
+#define MAXPOWOF2 (MAXLENGTH*2)  // mno≈ºnik to podzielony na p√≥≈Ç log2(MAXBASE) - w tym przypadku (log2(16))/2 = 2
 
-void symbols_to_values(char*, int*, int);
+int symbol_to_value(char, int, int);
 
 void values_to_symbols(int*, char*);
 

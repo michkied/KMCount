@@ -17,43 +17,55 @@ int main()
         exit(1);
     }
 
-    char a[MAXLENGTH];
-    char b[MAXLENGTH];
-    memset(a, '0', sizeof(a));
-    memset(b, '0', sizeof(b));
-
-    int startFromLine = 0;
-
-    while (1) {
-        char operationType = get_operation(fp, startFromLine);
-
-
-        memset(a, '0', sizeof(a));
-        memset(b, '0', sizeof(b));
-        break;
-    }
-
-    int aSize = sizeof(a) / sizeof(a[0]);
-    int bSize = sizeof(b) / sizeof(b[0]);
-
     int aVal[MAXLENGTH] = { 0 };
     int bVal[MAXLENGTH] = { 0 };
+
+    int startFromLine = 0;
+    int base;
+    char opType;
+
     int result[MAXLENGTH] = { 0 };
     char resultExpression[MAXLENGTH];
-    int i;
-    for (i = 0; i < MAXLENGTH; i++) {
-        resultExpression[i] = '0';
+    memset(resultExpression, '0', sizeof(resultExpression));
+
+    while (1) {
+        opType = get_operation(fp, startFromLine, &base, aVal, bVal);
+
+        if (opType == 'b') {
+            convert_bases(base, bVal[0], aVal);
+        }
+
+        if (opType == '+') {
+            add(base, aVal, bVal, result);
+        }
+
+        if (opType == '-') {
+            subtract(base, aVal, bVal, result);
+        }
+
+        if (opType == '*') {
+            multiply(base, aVal, bVal, result);
+        }
+
+        if (opType == '/') {
+            divide(base, aVal, bVal, result);
+        }
+
+        if (opType == '^') {
+            exponentiate(base, aVal, bVal, result);
+        }
+
+        if (opType == '%') {
+            mod(base, aVal, bVal, result);
+        }
+
+        break;
     }
-
-    symbols_to_values(a, aVal, aSize);
-    symbols_to_values(b, bVal, bSize);
-
-//    multiply(10, aVal, bVal, result);
-
 
     values_to_symbols(result, resultExpression);
 
     printf("Result: ");
+    int i;
     for (i = 0; i < MAXLENGTH; i++) {
         printf("%c", resultExpression[i]);
     }

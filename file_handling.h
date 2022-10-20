@@ -1,4 +1,4 @@
 
 #define NUMBER_OF_OPERATIONS 6
 
-char get_operation(FILE*, int);
+char get_operation(FILE*, int, int*, int*, int*);

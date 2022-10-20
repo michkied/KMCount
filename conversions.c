@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "conversions.h"
 #include "operations.h"
@@ -8,16 +9,20 @@ const char symbols[MAXBASE] = {
 };
 
 
-void symbols_to_values(char* expression, int* values, int size) {
-	int i1, i2;
-	for (i1 = 0; i1 < size; i1++) {
-		for (i2 = 0; i2 < MAXBASE; i2++) {
-			if (expression[i1] == symbols[i2]) {
-				values[MAXLENGTH-size+i1+1] = i2;
-				break;
-			}
-		}
-	}
+int symbol_to_value(char symbol, int base, int lineNum) {
+    if (symbol == '_' || symbol == '\n' || symbol == '\000') {
+        return -1;
+    }
+
+    int i;
+    for (i = 0; i < base; i++) {
+        if (symbol == symbols[i]) {
+            return i;
+        }
+    }
+
+    printf("ERROR 130: Character %c in line #%i is invalid", symbol, lineNum + 1);
+    exit(1);
 }
 
 

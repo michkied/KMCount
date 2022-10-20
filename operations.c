@@ -43,7 +43,7 @@ int* maxVal(int* aVal, int* bVal) {
 
 int are_equal(int* aVal, int* bVal) {
 	int i;
-	for (i = MAXLENGTH-1; i > 0; i--) {
+	for (i = MAXLENGTH-1; i >= 0; i--) {
 		if (aVal[i] == bVal[i]) {
 			continue;
 		}
@@ -65,7 +65,7 @@ void add(int base, int *aVal, int *bVal, int *result) {
 	int carry = 0;
 	int i;
 
-	for (i = MAXLENGTH-1; i > 0; i--) {
+	for (i = MAXLENGTH-1; i >= 0; i--) {
 		if (aVal[i] + bVal[i] + carry < base) {
 			result[i] = aVal[i] + bVal[i] + carry;
 			carry = 0;
@@ -252,7 +252,7 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 		buf[i] = aVal[i];
 	}
 
-	for (i = MAXLENGTH - 1; i > 0; i--) {
+	for (i = MAXLENGTH - 1; i >= 0; i--) {
 		if (buf[i] < bVal[i]) {
 			buf[i - 1]--;
 			buf[i] += base;
