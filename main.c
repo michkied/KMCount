@@ -6,21 +6,40 @@
 #include "file_handling.h"
 
 
-int main()
+int main(int argc, char *argv[])
 {
-    char *filenameIn = "test.txt";
-    FILE *fpIn = fopen(filenameIn, "r");
-
-    if (fpIn == NULL) {
-        printf("ERROR 100: Unable to open input file: %s", filenameIn);
+    if (argc < 2) {
+        printf("ERROR 100: Missing argument - input file");
         exit(1);
     }
 
-    char *filenameOut = "test2.txt";
-    FILE *fpOut = fopen(filenameOut, "w");
+    char *filenameIn = argv[1];
+    char* dot = strrchr(filenameIn, '_');
+    if (strcmp(dot, "_in.txt") != 0 || strlen(filenameIn) != 12) {
+        printf("ERROR 101: Incorrect input file name format");
+        exit(1);
+    }
+    FILE *fpIn = fopen(filenameIn, "r");
+    if (fpIn == NULL) {
+        printf("ERROR 102: Unable to open input file");
+        exit(1);
+    }
 
+    char filenameOut[13];
+    int i;
+    int pos = (int)(dot-filenameIn);
+    for (i = 0; i < pos; i++) {
+        filenameOut[i] = filenameIn[i];
+    }
+    char suffix[] = "_out.txt";
+    while (i < 13) {
+        filenameOut[i] = suffix[i-5];
+        i++;
+    }
+
+    FILE *fpOut = fopen(filenameOut, "w");
     if (fpOut == NULL) {
-        printf("ERROR 300: Unable to create output file: %s", filenameOut);
+        printf("ERROR 300: Unable to create output file - %s", filenameOut);
         exit(1);
     }
 
@@ -35,7 +54,6 @@ int main()
     char resultExpression[MAXLENGTH];
     char buf[MAXLENGTH+3];
 
-    int i;
     while (1) {
         memset(resultExpression, '0', sizeof(resultExpression));
         memset(result, 0, sizeof(result));
