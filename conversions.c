@@ -21,7 +21,7 @@ int symbol_to_value(char symbol, int base, int lineNum) {
         }
     }
 
-    printf("ERROR 130: Character %c in line #%i is invalid", symbol, lineNum + 1);
+    printf("ERROR 130: Character %c in not valid in base %i (line #%i)", symbol, base, lineNum + 1);
     exit(1);
 }
 

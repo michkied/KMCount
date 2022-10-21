@@ -75,16 +75,18 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
 }
 
 
-char get_operation(FILE *fp, int startFromLine, int *operationBase, int *aVal, int *bVal) {
+char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBase, int *aVal, int *bVal) {
     int lineNum, i, value;
     int i2 = MAXLENGTH-1;
     char operationType;
     char buf[MAXLENGTH+3];
     memset(buf, '_', sizeof(buf));
+    int finish = 0;
 
-    for (lineNum=0; fgets(buf, MAXLENGTH + 3, fp) != NULL; lineNum++) {
-        if (lineNum < startFromLine) {
-            continue;
+    for (lineNum=0; fgets(buf, MAXLENGTH + 3, fpIn) != NULL; lineNum++) {
+        fprintf(fpOut, "%s", buf);
+        if (finish) {
+            return operationType;
         }
 
         if (buf[MAXLENGTH+2] != '_') {
@@ -92,12 +94,12 @@ char get_operation(FILE *fp, int startFromLine, int *operationBase, int *aVal, i
             exit(1);
         }
 
-        if (lineNum == startFromLine) {
+        if (lineNum == 0) {
             get_header(buf, lineNum+startFromLine, &operationType, operationBase, &bVal[0]);
             continue;
         }
 
-        if (lineNum == startFromLine+2) {
+        if (lineNum == 2) {
             for (i = MAXLENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase, lineNum+startFromLine);
                 if (value == -1) {
@@ -107,12 +109,13 @@ char get_operation(FILE *fp, int startFromLine, int *operationBase, int *aVal, i
                 i2--;
             }
             if (operationType == 'b') {
-                return operationType;
+                finish = 1;
+                continue;
             }
         }
 
         i2 = MAXLENGTH-1;
-        if (lineNum == startFromLine+4) {
+        if (lineNum == 4) {
             for (i = MAXLENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase, lineNum+startFromLine);
                 if (value == -1) {
@@ -121,10 +124,27 @@ char get_operation(FILE *fp, int startFromLine, int *operationBase, int *aVal, i
                 bVal[i2] = value;
                 i2--;
             }
-            return operationType;
+            finish = 1;
+            continue;
         }
 
         memset(buf, '_', sizeof(buf));
     }
-    return operationType;
+
+    printf("ERROR 111: Input format invalid (line #%i)", lineNum+startFromLine + 1);
+    exit(1);
+}
+
+
+void output_result(FILE *fpOut, char* resultExpression) {
+    int i = 0;
+    while (resultExpression[i] == '0') {
+        i++;
+    }
+
+    for (i; i < MAXLENGTH; i++) {
+        fprintf(fpOut, "%c", resultExpression[i]);
+    }
+    fprintf(fpOut, "\n\n");
+
 }
