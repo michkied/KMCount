@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
         printf("ERROR 101: Incorrect input file name format");
         exit(1);
     }
+
     FILE *fpIn = fopen(filenameIn, "r");
     if (fpIn == NULL) {
         printf("ERROR 102: Unable to open input file");
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
 
     FILE *fpOut = fopen(filenameOut, "w");
     if (fpOut == NULL) {
-        printf("ERROR 300: Unable to create output file - %s", filenameOut);
+        printf("ERROR 103: Unable to create output file - %s", filenameOut);
         exit(1);
     }
 
@@ -106,5 +107,4 @@ int main(int argc, char *argv[])
             }
         }
     }
-    return 10;
 }
