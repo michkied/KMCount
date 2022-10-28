@@ -57,13 +57,13 @@ int are_equal(int* aVal, int* bVal) {
 
 void add(int base, int *aVal, int *bVal, int *result) {
 
+    int carry = 0;
+    int i;
+
 	if (aVal[0] + bVal[0] >= base) {
 		printf("\nERROR 200: Overflow (MAX %i)\n", MAXLENGTH);
 		exit(1);
 	}
-
-	int carry = 0;
-	int i;
 
 	for (i = MAXLENGTH-1; i >= 0; i--) {
 		if (aVal[i] + bVal[i] + carry < base) {
@@ -83,16 +83,23 @@ void add(int base, int *aVal, int *bVal, int *result) {
 
 
 void multiply(int base, int* aVal, int* bVal, int* result) {
+
 	int *lVal = minVal(aVal, bVal);
 	int *hVal = maxVal(aVal, bVal);
-
 	int buf1[MAXLENGTH] = { 0 };
+    int buf2[MAXLENGTH] = { 0 };
+    int buf3[MAXLENGTH] = { 0 };
+    int buf4[MAXLENGTH] = { 0 };
+    int resultBuf[MAXLENGTH] = { 0 };
+    int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
+    int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+    int i, i2, i3;
+
 	if (are_equal(buf1, lVal)) {
 		return;
 	}
 
 	buf1[MAXLENGTH-1] = 1;
-	int i;
 	if (are_equal(buf1, lVal)) {
 		for (i = 0; i < MAXLENGTH; i++) {
 			result[i] = hVal[i];
@@ -100,19 +107,15 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 		return;
 	}
 
-	int buf2[MAXLENGTH] = { 0 };
 	for (i = 0; i < MAXLENGTH; i++) {
 		buf2[i] = hVal[i];
 	}
 
-	int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
-	int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
 	powersOf2[0][MAXLENGTH - 1] = 1;
 	for (i = 0; i < MAXLENGTH; i++) {
 		powersOfVal[0][i] = buf2[i];
 	}
 
-	int i2, i3;
 	for (i = 1; 1; i++) {
 		if (lVal == minVal(lVal, buf1)) {
 			break;
@@ -128,9 +131,6 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 			powersOfVal[i][i2] = buf2[i2];
 	}
 
-	int buf3[MAXLENGTH] = { 0 };
-	int buf4[MAXLENGTH] = { 0 };
-	int resultBuf[MAXLENGTH] = { 0 };
 	for (i2 = i-1; i2 >= 0; i2--) {
 
 		for (i3 = 0; i3 < MAXLENGTH; i3++) {
@@ -164,13 +164,20 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 	int buf1[MAXLENGTH] = { 0 };
+    int buf2[MAXLENGTH] = { 0 };
+    int buf3[MAXLENGTH] = { 0 };
+    int buf4[MAXLENGTH] = { 0 };
+    int resultBuf[MAXLENGTH] = { 0 };
+    int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
+    int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+    int i, i2, i3;
+
 	if (are_equal(buf1, bVal)) {
 		result[MAXLENGTH-1] = 1;
 		return;
 	}
 
 	buf1[MAXLENGTH - 1] = 1;
-	int i;
 	if (are_equal(buf1, bVal)) {
 		for (i = 0; i < MAXLENGTH; i++) {
 			result[i] = aVal[i];
@@ -178,14 +185,10 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 		return;
 	}
 
-	int buf2[MAXLENGTH] = { 0 };
 	for (i = 0; i < MAXLENGTH; i++) {
 		buf2[i] = aVal[i];
 	}
 
-	int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
-	int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
-	int i2, i3;
 	for (i = 0; 1; i++) {
 		if (bVal == minVal(bVal, buf1)) {
 			break;
@@ -201,9 +204,6 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 		}
 	}
 
-	int buf3[MAXLENGTH] = { 0 };
-	int buf4[MAXLENGTH] = { 0 };
-	int resultBuf[MAXLENGTH] = { 0 };
 	resultBuf[MAXLENGTH - 1] = 1;
 	for (i2 = i - 1; i2 >= 0; i2--) {
 
@@ -241,13 +241,14 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 void subtract(int base, int* aVal, int* bVal, int* result) {
 
+    int buf[MAXLENGTH] = { 0 };
+    int i;
+
 	if (minVal(bVal, aVal) == aVal) {
 		printf("\nERROR 211: Subtraction argument error\n");
 		exit(1);
 	}
 
-	int i;
-	int buf[MAXLENGTH] = { 0 };
 	for (i = 0; i < MAXLENGTH; i++) {
 		buf[i] = aVal[i];
 	}
@@ -265,6 +266,14 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 void divide(int base, int* aVal, int* bVal, int* result) {
 
 	int buf1[MAXLENGTH] = { 0 };
+    int buf2[MAXLENGTH] = { 0 };
+    int buf3[MAXLENGTH] = { 0 };
+    int buf4[MAXLENGTH] = { 0 };
+    int resultBuf[MAXLENGTH] = { 0 };
+    int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
+    int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
+    int i, i2, i3;
+
 	if (are_equal(buf1, bVal)) {
 		printf("\nERROR 220: Division by zero\n");
 		exit(1);
@@ -276,7 +285,6 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 	}
 
 	buf1[MAXLENGTH - 1] = 1;
-	int i;
 	if (are_equal(buf1, bVal)) {
 		for (i = 0; i < MAXLENGTH; i++) {
 			result[i] = aVal[i];
@@ -284,19 +292,15 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		return;
 	}
 
-	int buf2[MAXLENGTH] = { 0 };
 	for (i = 0; i < MAXLENGTH; i++) {
 		buf2[i] = bVal[i];
 	}
 
-	int powersOfVal[MAXPOWOF2][MAXLENGTH] = { {0} };
-	int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
 	powersOf2[0][MAXLENGTH - 1] = 1;
 	for (i = 0; i < MAXLENGTH; i++) {
 		powersOfVal[0][i] = buf2[i];
 	}
 
-	int i2, i3;
 	for (i = 1; 1; i++) {
 		if (aVal == minVal(aVal, buf2)) {
 			break;
@@ -312,9 +316,6 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 			powersOfVal[i][i2] = buf2[i2];
 	}
 
-	int buf3[MAXLENGTH] = { 0 };
-	int buf4[MAXLENGTH] = { 0 };
-	int resultBuf[MAXLENGTH] = { 0 };
 	for (i2 = i - 1; i2 >= 0; i2--) {
 
 		for (i3 = 0; i3 < MAXLENGTH; i3++) {
@@ -348,6 +349,7 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 void mod(int base, int* aVal, int* bVal, int* result) {
 
 	int buf1[MAXLENGTH] = { 0 };
+
 	if (are_equal(buf1, bVal)) {
 		printf("\nERROR 230: Modulo by zero\n");
 		exit(1);

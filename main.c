@@ -8,59 +8,62 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2) {
-        printf("ERROR 100: Missing argument - input file");
-        exit(1);
-    }
-
-    char *filenameIn = argv[1];
-    char* dot = strrchr(filenameIn, '_');
-    if (strcmp(dot, "_in.txt") != 0 || strlen(filenameIn) != 12) {
-        printf("ERROR 101: Incorrect input file name format");
-        exit(1);
-    }
-
-    FILE *fpIn = fopen(filenameIn, "r");
-    if (fpIn == NULL) {
-        printf("ERROR 102: Unable to open input file");
-        exit(1);
-    }
-
+    char* filenameIn;
+    char* suffix;
     char filenameOut[13];
-    int i;
-    int pos = (int)(dot-filenameIn);
-    for (i = 0; i < pos; i++) {
-        filenameOut[i] = filenameIn[i];
-    }
-    char suffix[] = "_out.txt";
-    while (i < 13) {
-        filenameOut[i] = suffix[i-5];
-        i++;
-    }
-
-    FILE *fpOut = fopen(filenameOut, "w");
-    if (fpOut == NULL) {
-        printf("ERROR 103: Unable to create output file - %s", filenameOut);
-        exit(1);
-    }
+    char correct_suffix[] = "_out.txt";
+    int i, pos;
+    FILE *fpIn, *fpOut;
 
     int aVal[MAXLENGTH] = { 0 };
     int bVal[MAXLENGTH] = { 0 };
+    int result[MAXLENGTH] = { 0 };
 
     int startFromLine = 0;
     int base;
     char opType;
 
-    int result[MAXLENGTH] = { 0 };
     char resultExpression[MAXLENGTH];
     char buf[MAXLENGTH+3];
+
+    if (argc < 2) {
+        printf("ERROR 100: Missing argument - input file");
+        exit(1);
+    }
+
+    filenameIn = argv[1];
+    suffix = strrchr(filenameIn, '_');
+    if (strcmp(suffix, "_in.txt") != 0 || strlen(filenameIn) != 12) {
+        printf("ERROR 101: Incorrect input file name format");
+        exit(1);
+    }
+
+    fpIn = fopen(filenameIn, "r");
+    if (fpIn == NULL) {
+        printf("ERROR 102: Unable to open input file - %s", filenameIn);
+        exit(1);
+    }
+
+    pos = (int)(suffix - filenameIn);
+    for (i = 0; i < pos; i++) {
+        filenameOut[i] = filenameIn[i];
+    }
+    while (i < 13) {
+        filenameOut[i] = correct_suffix[i - 5];
+        i++;
+    }
+
+    fpOut = fopen(filenameOut, "w");
+    if (fpOut == NULL) {
+        printf("ERROR 103: Unable to create output file - %s", filenameOut);
+        exit(1);
+    }
 
     while (1) {
         memset(resultExpression, '0', sizeof(resultExpression));
         memset(result, 0, sizeof(result));
         memset(aVal, 0, sizeof(aVal));
         memset(bVal, 0, sizeof(bVal));
-        base = 0;
 
         opType = get_operation(fpIn, fpOut, startFromLine, &base, aVal, bVal);
 

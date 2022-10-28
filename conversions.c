@@ -10,11 +10,12 @@ const char symbols[MAXBASE] = {
 
 
 int symbol_to_value(char symbol, int base, int lineNum) {
+    int i;
+
     if (symbol == '_' || symbol == '\n' || symbol == '\000') {
         return -1;
     }
 
-    int i;
     for (i = 0; i < base; i++) {
         if (symbol == symbols[i]) {
             return i;
@@ -38,13 +39,14 @@ void values_to_symbols(int* values, char* resultExpression) {
 
 void convert_value(int targetBase, int* value) {
 
+    int i = targetBase - 1;
+    int buf[MAXLENGTH] = {0};
+    int one[MAXLENGTH] = { 0 };
+
 	if (targetBase > value[MAXLENGTH - 1]) {
 		return;
 	}
 
-	int i = targetBase - 1;
-	int buf[MAXLENGTH] = {0};
-	int one[MAXLENGTH] = { 0 };
 	buf[MAXLENGTH - 1] = targetBase - 1;
 	one[MAXLENGTH - 1] = 1;
 
@@ -60,17 +62,18 @@ void convert_value(int targetBase, int* value) {
 
 
 void convert_bases(int currentBase, int targetBase, int* values) {
+    int i;
+    int baseRep[MAXLENGTH] = { 0 };
+    int buf1[MAXLENGTH] = { 0 };
+    int buf2[MAXLENGTH] = { 0 };
+
 	if (targetBase == currentBase) {
 		return;
 	}
 
-	int i;
-	int baseRep[MAXLENGTH] = { 0 };
 	baseRep[MAXLENGTH - 1] = currentBase;
 	convert_value(targetBase, baseRep);
 
-	int buf1[MAXLENGTH] = { 0 };
-	int buf2[MAXLENGTH] = { 0 };
 	for (i = 0; i < MAXLENGTH; i++) {
 		buf2[MAXLENGTH - 1] = values[i];
 

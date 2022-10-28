@@ -20,6 +20,9 @@ int is_digit(char character) {
 
 void get_header(char* buf, int lineNum, char* operationType, int* operationBase, int* targetBase) {
     int i = 0;
+    int opB;
+    char opT[MAXLENGTH];
+
     while (buf[i] != '\n' && buf[i] != EOF) {
         if (buf[i] == ' ') {
             if (buf[i+1] == '\n' || buf[i+1] == EOF) {
@@ -34,8 +37,6 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
         exit(1);
     }
 
-    int opB;
-    char opT[MAXLENGTH];
     memset(opT, '_', sizeof(opT));
     sscanf(buf, "%s%i", opT, &opB);
 
@@ -79,9 +80,9 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
     int lineNum, i, value;
     int i2 = MAXLENGTH-1;
     char operationType;
+    int finish = 0;
     char buf[MAXLENGTH+3];
     memset(buf, '_', sizeof(buf));
-    int finish = 0;
 
     for (lineNum=0; fgets(buf, MAXLENGTH + 3, fpIn) != NULL; lineNum++) {
         fprintf(fpOut, "%s", buf);
@@ -142,8 +143,13 @@ void output_result(FILE *fpOut, char* resultExpression) {
         i++;
     }
 
-    for (i; i < MAXLENGTH; i++) {
-        fprintf(fpOut, "%c", resultExpression[i]);
+    if (i == MAXLENGTH) {
+        fprintf(fpOut, "0");
+    }
+    else {
+        for (i; i < MAXLENGTH; i++) {
+            fprintf(fpOut, "%c", resultExpression[i]);
+        }
     }
     fprintf(fpOut, "\n\n");
 
