@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
         memset(buf, '_', sizeof(buf));
         for (i = 2; i > 0; i--) {
             if (fgets(buf, MAXLENGTH + 3, fpIn) == NULL) {
+                printf("\nSuccess!\n");
                 return 0;
             }
         }
