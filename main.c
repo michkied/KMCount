@@ -15,16 +15,16 @@ int main(int argc, char *argv[])
     int i, pos;
     FILE *fpIn, *fpOut;
 
-    int aVal[MAXLENGTH] = { 0 };
-    int bVal[MAXLENGTH] = { 0 };
-    int result[MAXLENGTH] = { 0 };
+    int aVal[MAX_LENGTH] = { 0 };
+    int bVal[MAX_LENGTH] = { 0 };
+    int result[MAX_LENGTH] = { 0 };
 
     int lineNum = 0;
     int base;
     char opType;
 
-    char resultExpression[MAXLENGTH];
-    char buf[MAXLENGTH+3];
+    char resultExpression[MAX_LENGTH];
+    char buf[MAX_LENGTH + 3];
 
     if (argc < 2) {
         printf("ERROR 100: Missing argument - input file");
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
         if (opType == 'b') {
             convert_bases(base, bVal[0], aVal);
-            for (i = 0; i < MAXLENGTH; i++)
+            for (i = 0; i < MAX_LENGTH; i++)
                 result[i] = aVal[i];
             lineNum -= 2;
         }
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
         memset(buf, '_', sizeof(buf));
         for (i = 2; i > 0; i--) {
-            if (fgets(buf, MAXLENGTH + 3, fpIn) == NULL) {
+            if (fgets(buf, MAX_LENGTH + 3, fpIn) == NULL) {
                 printf("\nSuccess!\n");
                 return 0;
             }

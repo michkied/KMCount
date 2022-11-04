@@ -19,7 +19,7 @@ int is_digit(char character) {
 void get_header(char* buf, int lineNum, char* operationType, int* operationBase, int* targetBase) {
     int i = 0;
     int opB;
-    char opT[MAXLENGTH];
+    char opT[MAX_LENGTH];
 
     while (buf[i] != '\n' && buf[i] != EOF) {
         if (buf[i] == ' ') {
@@ -37,7 +37,7 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     memset(opT, '_', sizeof(opT));
     sscanf(buf, "%s%i", opT, &opB);
 
-    if (opB > MAXBASE || opB <= 1) {
+    if (opB > MAX_BASE || opB <= 1) {
         printf("ERROR 121: Invalid operation base - %i (line #%i)", opB, lineNum+1);
         exit(1);
     }
@@ -49,7 +49,7 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
         *operationType = 'b';
     }
     if (*operationType == 'b') {
-        if (*targetBase > MAXBASE || *targetBase <= 1) {
+        if (*targetBase > MAX_BASE || *targetBase <= 1) {
             printf("ERROR 123: Invalid target base - %i (line #%i)", *targetBase, lineNum+1);
             exit(1);
         }
@@ -75,18 +75,18 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
 
 char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBase, int *aVal, int *bVal) {
     int lineNum, i, value;
-    int i2 = MAXLENGTH-1;
+    int i2 = MAX_LENGTH - 1;
     char operationType;
     int finish = 0;
-    char buf[MAXLENGTH+3];
+    char buf[MAX_LENGTH + 3];
     memset(buf, '_', sizeof(buf));
 
-    for (lineNum=0; fgets(buf, MAXLENGTH + 3, fpIn) != NULL; lineNum++) {
+    for (lineNum=0; fgets(buf, MAX_LENGTH + 3, fpIn) != NULL; lineNum++) {
         fprintf(fpOut, "%s", buf);
 
         if (finish) return operationType;
 
-        if (buf[MAXLENGTH+2] != '_') {
+        if (buf[MAX_LENGTH + 2] != '_') {
             printf("ERROR 110: Input line #%i is too long", lineNum+startFromLine + 1);
             exit(1);
         }
@@ -97,7 +97,7 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
         }
 
         if (lineNum == 2) {
-            for (i = MAXLENGTH; i >= 0; i--) {
+            for (i = MAX_LENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase, lineNum+startFromLine);
                 if (value == -1) continue;
                 aVal[i2] = value;
@@ -109,9 +109,9 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
             }
         }
 
-        i2 = MAXLENGTH-1;
+        i2 = MAX_LENGTH - 1;
         if (lineNum == 4) {
-            for (i = MAXLENGTH; i >= 0; i--) {
+            for (i = MAX_LENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase, lineNum+startFromLine);
                 if (value == -1) continue;
                 bVal[i2] = value;
@@ -134,11 +134,11 @@ void output_result(FILE *fpOut, char* resultExpression) {
     while (resultExpression[i] == '0')
         i++;
 
-    if (i == MAXLENGTH)
+    if (i == MAX_LENGTH)
         fprintf(fpOut, "0");
 
     else
-        for (i; i < MAXLENGTH; i++)
+        for (i; i < MAX_LENGTH; i++)
             fprintf(fpOut, "%c", resultExpression[i]);
 
     fprintf(fpOut, "\n\n");

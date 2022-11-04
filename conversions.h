@@ -1,6 +1,6 @@
-#define MAXBASE 16
-#define MAXLENGTH 40
-#define MAXPOWOF2 (MAXLENGTH*4)  // mnożnik to log2(MAXBASE) - w tym przypadku log2(16) = 4
+#define MAX_BASE 16
+#define MAX_LENGTH 40
+#define MAX_POW_2 (MAX_LENGTH*4)  // mnożnik to log2(MAX_BASE) - w tym przypadku log2(16) = 4
 
 int symbol_to_value(char, int, int);
 
