@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
     }
 
     pos = (int)(suffix - filenameIn);
-    for (i = 0; i < pos; i++) {
+    for (i = 0; i < pos; i++)
         filenameOut[i] = filenameIn[i];
-    }
+
     while (i < 13) {
         filenameOut[i] = correct_suffix[i - 5];
         i++;
@@ -69,35 +69,28 @@ int main(int argc, char *argv[])
 
         if (opType == 'b') {
             convert_bases(base, bVal[0], aVal);
-            for (i = 0; i < MAXLENGTH; i++) {
+            for (i = 0; i < MAXLENGTH; i++)
                 result[i] = aVal[i];
-            }
             startFromLine -= 2;
         }
 
-        else if (opType == '+') {
+        else if (opType == '+')
             add(base, aVal, bVal, result);
-        }
 
-        else if (opType == '-') {
+        else if (opType == '-')
             subtract(base, aVal, bVal, result);
-        }
 
-        else if (opType == '*') {
+        else if (opType == '*')
             multiply(base, aVal, bVal, result);
-        }
 
-        else if (opType == '/') {
+        else if (opType == '/')
             divide(base, aVal, bVal, result);
-        }
 
-        else if (opType == '^') {
+        else if (opType == '^')
             exponentiate(base, aVal, bVal, result);
-        }
 
-        else if (opType == '%') {
+        else if (opType == '%')
             mod(base, aVal, bVal, result);
-        }
 
         values_to_symbols(result, resultExpression);
         output_result(fpOut, resultExpression);

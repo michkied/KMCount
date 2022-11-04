@@ -12,15 +12,10 @@ const char symbols[MAXBASE] = {
 int symbol_to_value(char symbol, int base, int lineNum) {
     int i;
 
-    if (symbol == '_' || symbol == '\n' || symbol == '\000') {
-        return -1;
-    }
+    if (symbol == '_' || symbol == '\n' || symbol == '\000') return -1;
 
-    for (i = 0; i < base; i++) {
-        if (symbol == symbols[i]) {
-            return i;
-        }
-    }
+    for (i = 0; i < base; i++)
+        if (symbol == symbols[i]) return i;
 
     printf("ERROR 130: Character %c in not valid in base %i (line #%i)", symbol, base, lineNum + 1);
     exit(1);
@@ -30,9 +25,8 @@ int symbol_to_value(char symbol, int base, int lineNum) {
 void values_to_symbols(int* values, char* resultExpression) {
 	int i;
 	for (i = 0; i < MAXLENGTH; i++) {
-		if (values[i]) {
+		if (values[i])
 			resultExpression[i] = symbols[values[i]];
-		}
 	}
 }
 
@@ -43,9 +37,7 @@ void convert_value(int targetBase, int* value) {
     int buf[MAXLENGTH] = {0};
     int one[MAXLENGTH] = { 0 };
 
-	if (targetBase > value[MAXLENGTH - 1]) {
-		return;
-	}
+	if (targetBase > value[MAXLENGTH - 1]) return;
 
 	buf[MAXLENGTH - 1] = targetBase - 1;
 	one[MAXLENGTH - 1] = 1;
@@ -55,9 +47,8 @@ void convert_value(int targetBase, int* value) {
 		i++;
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		value[i] = buf[i];
-	}
 }
 
 
@@ -67,9 +58,7 @@ void convert_bases(int currentBase, int targetBase, int* values) {
     int buf1[MAXLENGTH] = { 0 };
     int buf2[MAXLENGTH] = { 0 };
 
-	if (targetBase == currentBase) {
-		return;
-	}
+	if (targetBase == currentBase) return;
 
 	baseRep[MAXLENGTH - 1] = currentBase;
 	convert_value(targetBase, baseRep);
@@ -84,7 +73,6 @@ void convert_bases(int currentBase, int targetBase, int* values) {
 		memset(buf2, 0, sizeof(buf2));
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		values[i] = buf1[i];
-	}
 }

@@ -10,15 +10,9 @@ int add_num = 0;
 int* minVal(int* aVal, int* bVal) {
 	int i;
 	for (i = 0; i < MAXLENGTH; i++) {
-		if (aVal[i] == bVal[i]) {
-			continue;
-		}
-		if (aVal[i] > bVal[i]) {
-			return bVal;
-		}
-		if (aVal[i] < bVal[i]) {
-			return aVal;
-		}
+		if (aVal[i] == bVal[i]) continue;
+		if (aVal[i] > bVal[i]) return bVal;
+		if (aVal[i] < bVal[i]) return aVal;
 	}
 	return aVal;
 }
@@ -27,15 +21,9 @@ int* minVal(int* aVal, int* bVal) {
 int* maxVal(int* aVal, int* bVal) {
 	int i;
 	for (i = 0; i < MAXLENGTH; i++) {
-		if (aVal[i] == bVal[i]) {
-			continue;
-		}
-		if (aVal[i] > bVal[i]) {
-			return aVal;
-		}
-		if (aVal[i] < bVal[i]) {
-			return bVal;
-		}
+		if (aVal[i] == bVal[i]) continue;
+		if (aVal[i] > bVal[i]) return aVal;
+		if (aVal[i] < bVal[i]) return bVal;
 	}
 	return aVal;
 }
@@ -44,12 +32,8 @@ int* maxVal(int* aVal, int* bVal) {
 int are_equal(int* aVal, int* bVal) {
 	int i;
 	for (i = MAXLENGTH-1; i >= 0; i--) {
-		if (aVal[i] == bVal[i]) {
-			continue;
-		}
-		else {
-			return 0;
-		}
+		if (aVal[i] == bVal[i]) continue;
+		else return 0;
 	}
 	return 1;
 }
@@ -75,9 +59,9 @@ void add(int base, int *aVal, int *bVal, int *result) {
 			carry = 1;
 		}
 	}
-	if (carry) {
+	if (carry)
 		result[0] = carry;
-	}
+
 	add_num++;
 }
 
@@ -95,34 +79,26 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
     int powersOf2[MAXPOWOF2][MAXLENGTH] = { {0} };
     int i, i2, i3;
 
-	if (are_equal(buf1, lVal)) {
-		return;
-	}
+	if (are_equal(buf1, lVal)) return;
 
 	buf1[MAXLENGTH-1] = 1;
 	if (are_equal(buf1, lVal)) {
-		for (i = 0; i < MAXLENGTH; i++) {
+		for (i = 0; i < MAXLENGTH; i++)
 			result[i] = hVal[i];
-		}
 		return;
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		buf2[i] = hVal[i];
-	}
 
 	powersOf2[0][MAXLENGTH - 1] = 1;
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		powersOfVal[0][i] = buf2[i];
-	}
 
 	for (i = 1; 1; i++) {
-		if (lVal == minVal(lVal, buf1)) {
-			break;
-		}
+		if (lVal == minVal(lVal, buf1)) break;
 
 		add(base, buf1, buf1, buf1);
-
 		for (i2 = 0; i2 < MAXLENGTH; i2++)
 			powersOf2[i][i2] = buf1[i2];
 
@@ -133,13 +109,11 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 
 	for (i2 = i-1; i2 >= 0; i2--) {
 
-		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+		for (i3 = 0; i3 < MAXLENGTH; i3++)
 			buf1[i3] = powersOf2[i2][i3];
-		}
 
-		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+		for (i3 = 0; i3 < MAXLENGTH; i3++)
 			buf2[i3] = powersOfVal[i2][i3];
-		}
 
 		add(base, buf1, buf3, buf4);
 
@@ -148,16 +122,13 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 			add(base, buf1, buf3, buf3);
 		}
 
-		if (are_equal(buf4, lVal)) {
-			break;
-		}
+		if (are_equal(buf4, lVal)) break;
 
 		memset(buf4, 0, sizeof(buf4));
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		result[i] = resultBuf[i];
-	}
 }
 
 
@@ -179,20 +150,16 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 	buf1[MAXLENGTH - 1] = 1;
 	if (are_equal(buf1, bVal)) {
-		for (i = 0; i < MAXLENGTH; i++) {
+		for (i = 0; i < MAXLENGTH; i++)
 			result[i] = aVal[i];
-		}
 		return;
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		buf2[i] = aVal[i];
-	}
 
 	for (i = 0; 1; i++) {
-		if (bVal == minVal(bVal, buf1)) {
-			break;
-		}
+		if (bVal == minVal(bVal, buf1)) break;
 
 		add(base, buf1, buf1, buf1);
 		for (i2 = 0; i2 < MAXLENGTH; i2++)
@@ -207,13 +174,11 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 	resultBuf[MAXLENGTH - 1] = 1;
 	for (i2 = i - 1; i2 >= 0; i2--) {
 
-		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+		for (i3 = 0; i3 < MAXLENGTH; i3++)
 			buf1[i3] = powersOf2[i2][i3];
-		}
 
-		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+		for (i3 = 0; i3 < MAXLENGTH; i3++)
 			buf2[i3] = powersOfVal[i2][i3];
-		}
 
 		add(base, buf1, buf3, buf4);
 
@@ -222,20 +187,16 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 			add(base, buf1, buf3, buf3);
 		}
 
-		if (are_equal(buf4, bVal)) {
-			break;
-		}
+		if (are_equal(buf4, bVal)) break;
 
 		memset(buf4, 0, sizeof(buf4));
 	}
 
-	if (!are_equal(bVal, buf3)) {
+	if (!are_equal(bVal, buf3))
 		multiply(base, aVal, resultBuf, resultBuf);
-	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		result[i] = resultBuf[i];
-	}
 }
 
 
@@ -249,9 +210,8 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 		exit(1);
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		buf[i] = aVal[i];
-	}
 
 	for (i = MAXLENGTH - 1; i >= 0; i--) {
 		if (buf[i] < bVal[i]) {
@@ -286,28 +246,22 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 
 	buf1[MAXLENGTH - 1] = 1;
 	if (are_equal(buf1, bVal)) {
-		for (i = 0; i < MAXLENGTH; i++) {
+		for (i = 0; i < MAXLENGTH; i++)
 			result[i] = aVal[i];
-		}
 		return;
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		buf2[i] = bVal[i];
-	}
 
 	powersOf2[0][MAXLENGTH - 1] = 1;
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		powersOfVal[0][i] = buf2[i];
-	}
 
 	for (i = 1; 1; i++) {
-		if (aVal == minVal(aVal, buf2)) {
-			break;
-		}
+		if (aVal == minVal(aVal, buf2)) break;
 
 		add(base, buf1, buf1, buf1);
-
 		for (i2 = 0; i2 < MAXLENGTH; i2++)
 			powersOf2[i][i2] = buf1[i2];
 
@@ -318,13 +272,11 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 
 	for (i2 = i - 1; i2 >= 0; i2--) {
 
-		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+		for (i3 = 0; i3 < MAXLENGTH; i3++)
 			buf1[i3] = powersOf2[i2][i3];
-		}
 
-		for (i3 = 0; i3 < MAXLENGTH; i3++) {
+		for (i3 = 0; i3 < MAXLENGTH; i3++)
 			buf2[i3] = powersOfVal[i2][i3];
-		}
 
 		add(base, buf2, buf3, buf4);
 
@@ -333,16 +285,14 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 			add(base, buf2, buf3, buf3);
 		}
 
-		if (are_equal(buf4, aVal)) {
+		if (are_equal(buf4, aVal))
 			break;
-		}
 
 		memset(buf4, 0, sizeof(buf4));
 	}
 
-	for (i = 0; i < MAXLENGTH; i++) {
+	for (i = 0; i < MAXLENGTH; i++)
 		result[i] = resultBuf[i];
-	}
 }
 
 
