@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     char* filenameIn;
     char* suffix;
     char filenameOut[13];
-    char correct_suffix[] = "_out.txt";
+    char out_suffix[] = "_out.txt";
     int i, pos;
     FILE *fpIn, *fpOut;
 
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     int bVal[MAXLENGTH] = { 0 };
     int result[MAXLENGTH] = { 0 };
 
-    int startFromLine = 0;
+    int lineNum = 0;
     int base;
     char opType;
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         filenameOut[i] = filenameIn[i];
 
     while (i < 13) {
-        filenameOut[i] = correct_suffix[i - 5];
+        filenameOut[i] = out_suffix[i - 5];
         i++;
     }
 
@@ -65,13 +65,13 @@ int main(int argc, char *argv[])
         memset(aVal, 0, sizeof(aVal));
         memset(bVal, 0, sizeof(bVal));
 
-        opType = get_operation(fpIn, fpOut, startFromLine, &base, aVal, bVal);
+        opType = get_operation(fpIn, fpOut, lineNum, &base, aVal, bVal);
 
         if (opType == 'b') {
             convert_bases(base, bVal[0], aVal);
             for (i = 0; i < MAXLENGTH; i++)
                 result[i] = aVal[i];
-            startFromLine -= 2;
+            lineNum -= 2;
         }
 
         else if (opType == '+')
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
         values_to_symbols(result, resultExpression);
         output_result(fpOut, resultExpression);
-        startFromLine += 8;
+        lineNum += 8;
 
         memset(buf, '_', sizeof(buf));
         for (i = 2; i > 0; i--) {
