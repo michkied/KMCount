@@ -206,7 +206,7 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
     int i;
 
 	if (minVal(bVal, aVal) == aVal) {
-		printf("\nERROR 211: Subtraction argument error\n");
+		printf("\nERROR 201: Subtraction argument error\n");
 		exit(1);
 	}
 
@@ -235,12 +235,12 @@ void divide(int base, int* aVal, int* bVal, int* result) {
     int i, i2, i3;
 
 	if (are_equal(buf1, bVal)) {
-		printf("\nERROR 220: Division by zero\n");
+		printf("\nERROR 202: Division by zero\n");
 		exit(1);
 	}
 
 	if (minVal(aVal, bVal) == aVal) {
-		printf("\nERROR 221: Division argument error\n");
+		printf("\nERROR 201: Division argument error\n");
 		exit(1);
 	}
 
@@ -301,12 +301,12 @@ void mod(int base, int* aVal, int* bVal, int* result) {
 	int buf1[MAXLENGTH] = { 0 };
 
 	if (are_equal(buf1, bVal)) {
-		printf("\nERROR 230: Modulo by zero\n");
+		printf("\nERROR 202: Modulo by zero\n");
 		exit(1);
 	}
 
 	if (minVal(aVal, bVal) == aVal) {
-		printf("\nERROR 231: Modulo argument error\n");
+		printf("\nERROR 201: Modulo argument error\n");
 		exit(1);
 	}
 
