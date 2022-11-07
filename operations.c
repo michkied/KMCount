@@ -239,17 +239,20 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		exit(1);
 	}
 
-	if (minVal(aVal, bVal) == aVal) {
-		printf("\nERROR 201: Division argument error\n");
-		exit(1);
-	}
-
 	buf1[MAX_LENGTH - 1] = 1;
 	if (are_equal(buf1, bVal)) {
 		for (i = 0; i < MAX_LENGTH; i++)
 			result[i] = aVal[i];
 		return;
 	}
+
+    if (are_equal(aVal, bVal)) {
+        for (i = 0; i < MAX_LENGTH; i++)
+            result[i] = buf1[i];
+        return;
+    }
+
+    if (minVal(aVal, bVal) == aVal) return;
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		buf2[i] = bVal[i];
@@ -302,11 +305,6 @@ void mod(int base, int* aVal, int* bVal, int* result) {
 
 	if (are_equal(buf1, bVal)) {
 		printf("\nERROR 202: Modulo by zero\n");
-		exit(1);
-	}
-
-	if (minVal(aVal, bVal) == aVal) {
-		printf("\nERROR 201: Modulo argument error\n");
 		exit(1);
 	}
 
