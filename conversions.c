@@ -55,8 +55,8 @@ void convert_value(int targetBase, int* value) {
 void convert_bases(int currentBase, int targetBase, int* values) {
     int i;
     int baseRep[MAX_LENGTH] = { 0 };
-    int buf1[MAX_LENGTH] = { 0 };
-    int buf2[MAX_LENGTH] = { 0 };
+    int temp1[MAX_LENGTH] = { 0 };
+    int temp2[MAX_LENGTH] = { 0 };
 
 	if (targetBase == currentBase) return;
 
@@ -64,15 +64,15 @@ void convert_bases(int currentBase, int targetBase, int* values) {
 	convert_value(targetBase, baseRep);
 
 	for (i = 0; i < MAX_LENGTH; i++) {
-		buf2[MAX_LENGTH - 1] = values[i];
+		temp2[MAX_LENGTH - 1] = values[i];
 
-		convert_value(targetBase, buf2);
-		multiply(targetBase, buf1, baseRep, buf1);
-		add(targetBase, buf1, buf2, buf1);
+		convert_value(targetBase, temp2);
+		multiply(targetBase, temp1, baseRep, temp1);
+		add(targetBase, temp1, temp2, temp1);
 
-		memset(buf2, 0, sizeof(buf2));
+		memset(temp2, 0, sizeof(temp2));
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		values[i] = buf1[i];
+		values[i] = temp1[i];
 }

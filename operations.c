@@ -70,61 +70,59 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 
 	int *lVal = minVal(aVal, bVal);
 	int *hVal = maxVal(aVal, bVal);
-	int buf1[MAX_LENGTH] = { 0 };
-    int buf2[MAX_LENGTH] = { 0 };
-    int buf3[MAX_LENGTH] = { 0 };
-    int buf4[MAX_LENGTH] = { 0 };
+	int temp1[MAX_LENGTH] = { 0 };
+    int temp2[MAX_LENGTH] = { 0 };
+    int temp3[MAX_LENGTH] = { 0 };
+    int temp4[MAX_LENGTH] = { 0 };
     int resultBuf[MAX_LENGTH] = { 0 };
     int powersOfVal[MAX_POW_2][MAX_LENGTH] = {{0} };
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
-    int i, i2, i3;
+    int topPower, i, i2;
 
-	if (are_equal(buf1, lVal)) return;
+	if (are_equal(temp1, lVal)) return;
 
-	buf1[MAX_LENGTH - 1] = 1;
-	if (are_equal(buf1, lVal)) {
+	temp1[MAX_LENGTH - 1] = 1;
+	if (are_equal(temp1, lVal)) {
 		for (i = 0; i < MAX_LENGTH; i++)
 			result[i] = hVal[i];
 		return;
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		buf2[i] = hVal[i];
+		temp2[i] = hVal[i];
 
 	powersOf2[0][MAX_LENGTH - 1] = 1;
 	for (i = 0; i < MAX_LENGTH; i++)
-		powersOfVal[0][i] = buf2[i];
+		powersOfVal[0][i] = temp2[i];
 
-	for (i = 1; 1; i++) {
-		if (lVal == minVal(lVal, buf1)) break;
+	for (topPower = 1; lVal != minVal(lVal, temp1); topPower++) {
+		add(base, temp1, temp1, temp1);
+		for (i = 0; i < MAX_LENGTH; i++)
+			powersOf2[topPower][i] = temp1[i];
 
-		add(base, buf1, buf1, buf1);
-		for (i2 = 0; i2 < MAX_LENGTH; i2++)
-			powersOf2[i][i2] = buf1[i2];
-
-		add(base, buf2, buf2, buf2);
-		for (i2 = 0; i2 < MAX_LENGTH; i2++)
-			powersOfVal[i][i2] = buf2[i2];
+		add(base, temp2, temp2, temp2);
+		for (i = 0; i < MAX_LENGTH; i++)
+			powersOfVal[topPower][i] = temp2[i];
 	}
 
-	for (i2 = i-1; i2 >= 0; i2--) {
+	for (i = topPower - 1; i >= 0; i--) {
 
-		for (i3 = 0; i3 < MAX_LENGTH; i3++)
-			buf1[i3] = powersOf2[i2][i3];
+		for (i2 = 0; i2 < MAX_LENGTH; i2++)
+			temp1[i2] = powersOf2[i][i2];
 
-		for (i3 = 0; i3 < MAX_LENGTH; i3++)
-			buf2[i3] = powersOfVal[i2][i3];
+		for (i2 = 0; i2 < MAX_LENGTH; i2++)
+			temp2[i2] = powersOfVal[i][i2];
 
-		add(base, buf1, buf3, buf4);
+		add(base, temp1, temp3, temp4);
 
-		if (minVal(buf4, lVal) == buf4) {
-			add(base, buf2, resultBuf, resultBuf);
-			add(base, buf1, buf3, buf3);
+		if (minVal(temp4, lVal) == temp4) {
+			add(base, temp2, resultBuf, resultBuf);
+			add(base, temp1, temp3, temp3);
 		}
 
-		if (are_equal(buf4, lVal)) break;
+		if (are_equal(temp4, lVal)) break;
 
-		memset(buf4, 0, sizeof(buf4));
+		memset(temp4, 0, sizeof(temp4));
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
@@ -134,65 +132,63 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 
 void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
-	int buf1[MAX_LENGTH] = { 0 };
-    int buf2[MAX_LENGTH] = { 0 };
-    int buf3[MAX_LENGTH] = { 0 };
-    int buf4[MAX_LENGTH] = { 0 };
+	int temp1[MAX_LENGTH] = { 0 };
+    int temp2[MAX_LENGTH] = { 0 };
+    int temp3[MAX_LENGTH] = { 0 };
+    int temp4[MAX_LENGTH] = { 0 };
     int resultBuf[MAX_LENGTH] = { 0 };
     int powersOfVal[MAX_POW_2][MAX_LENGTH] = {{0} };
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
-    int i, i2, i3;
+    int topPower, i, i2;
 
-	if (are_equal(buf1, bVal)) {
+	if (are_equal(temp1, bVal)) {
 		result[MAX_LENGTH - 1] = 1;
 		return;
 	}
 
-	buf1[MAX_LENGTH - 1] = 1;
-	if (are_equal(buf1, bVal)) {
+	temp1[MAX_LENGTH - 1] = 1;
+	if (are_equal(temp1, bVal)) {
 		for (i = 0; i < MAX_LENGTH; i++)
 			result[i] = aVal[i];
 		return;
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		buf2[i] = aVal[i];
+		temp2[i] = aVal[i];
 
-	for (i = 0; 1; i++) {
-		if (bVal == minVal(bVal, buf1)) break;
+	for (topPower = 0; bVal != minVal(bVal, temp1); topPower++) {
+		add(base, temp1, temp1, temp1);
+		for (i = 0; i < MAX_LENGTH; i++)
+			powersOf2[topPower][i] = temp1[i];
 
-		add(base, buf1, buf1, buf1);
-		for (i2 = 0; i2 < MAX_LENGTH; i2++)
-			powersOf2[i][i2] = buf1[i2];
-
-		multiply(base, buf2, buf2, buf2);
-		for (i2 = 0; i2 < MAX_LENGTH; i2++) {
-			powersOfVal[i][i2] = buf2[i2];
+		multiply(base, temp2, temp2, temp2);
+		for (i = 0; i < MAX_LENGTH; i++) {
+			powersOfVal[topPower][i] = temp2[i];
 		}
 	}
 
 	resultBuf[MAX_LENGTH - 1] = 1;
-	for (i2 = i - 1; i2 >= 0; i2--) {
+	for (i = topPower - 1; i >= 0; i--) {
 
-		for (i3 = 0; i3 < MAX_LENGTH; i3++)
-			buf1[i3] = powersOf2[i2][i3];
+		for (i2 = 0; i2 < MAX_LENGTH; i2++)
+			temp1[i2] = powersOf2[i][i2];
 
-		for (i3 = 0; i3 < MAX_LENGTH; i3++)
-			buf2[i3] = powersOfVal[i2][i3];
+		for (i2 = 0; i2 < MAX_LENGTH; i2++)
+			temp2[i2] = powersOfVal[i][i2];
 
-		add(base, buf1, buf3, buf4);
+		add(base, temp1, temp3, temp4);
 
-		if (minVal(buf4, bVal) == buf4) {
-			multiply(base, buf2, resultBuf, resultBuf);
-			add(base, buf1, buf3, buf3);
+		if (minVal(temp4, bVal) == temp4) {
+			multiply(base, temp2, resultBuf, resultBuf);
+			add(base, temp1, temp3, temp3);
 		}
 
-		if (are_equal(buf4, bVal)) break;
+		if (are_equal(temp4, bVal)) break;
 
-		memset(buf4, 0, sizeof(buf4));
+		memset(temp4, 0, sizeof(temp4));
 	}
 
-	if (!are_equal(bVal, buf3))
+	if (!are_equal(bVal, temp3))
 		multiply(base, aVal, resultBuf, resultBuf);
 
 	for (i = 0; i < MAX_LENGTH; i++)
@@ -225,22 +221,22 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 
 void divide(int base, int* aVal, int* bVal, int* result) {
 
-	int buf1[MAX_LENGTH] = { 0 };
-    int buf2[MAX_LENGTH] = { 0 };
-    int buf3[MAX_LENGTH] = { 0 };
-    int buf4[MAX_LENGTH] = { 0 };
+	int temp1[MAX_LENGTH] = { 0 };
+    int temp2[MAX_LENGTH] = { 0 };
+    int temp3[MAX_LENGTH] = { 0 };
+    int temp4[MAX_LENGTH] = { 0 };
     int resultBuf[MAX_LENGTH] = { 0 };
     int powersOfVal[MAX_POW_2][MAX_LENGTH] = {{0} };
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
-    int i, i2, i3;
+    int topPower, i, i2;
 
-	if (are_equal(buf1, bVal)) {
+	if (are_equal(temp1, bVal)) {
 		printf("\nERROR 202: Division by zero\n");
 		exit(1);
 	}
 
-	buf1[MAX_LENGTH - 1] = 1;
-	if (are_equal(buf1, bVal)) {
+	temp1[MAX_LENGTH - 1] = 1;
+	if (are_equal(temp1, bVal)) {
 		for (i = 0; i < MAX_LENGTH; i++)
 			result[i] = aVal[i];
 		return;
@@ -248,62 +244,60 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 
     if (are_equal(aVal, bVal)) {
         for (i = 0; i < MAX_LENGTH; i++)
-            result[i] = buf1[i];
+            result[i] = temp1[i];
         return;
     }
 
     if (minVal(aVal, bVal) == aVal) return;
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		buf2[i] = bVal[i];
+		temp2[i] = bVal[i];
 
 	powersOf2[0][MAX_LENGTH - 1] = 1;
 	for (i = 0; i < MAX_LENGTH; i++)
-		powersOfVal[0][i] = buf2[i];
+		powersOfVal[0][i] = temp2[i];
 
-	for (i = 1; 1; i++) {
-		if (aVal == minVal(aVal, buf2)) break;
+	for (topPower = 1; aVal != minVal(aVal, temp2); topPower++) {
+		add(base, temp1, temp1, temp1);
+		for (i = 0; i < MAX_LENGTH; i++)
+			powersOf2[topPower][i] = temp1[i];
 
-		add(base, buf1, buf1, buf1);
-		for (i2 = 0; i2 < MAX_LENGTH; i2++)
-			powersOf2[i][i2] = buf1[i2];
-
-		add(base, buf2, buf2, buf2);
-		for (i2 = 0; i2 < MAX_LENGTH; i2++)
-			powersOfVal[i][i2] = buf2[i2];
+		add(base, temp2, temp2, temp2);
+		for (i = 0; i < MAX_LENGTH; i++)
+			powersOfVal[topPower][i] = temp2[i];
 	}
 
-	for (i2 = i - 1; i2 >= 0; i2--) {
+	for (i = topPower - 1; i >= 0; i--) {
 
-		for (i3 = 0; i3 < MAX_LENGTH; i3++)
-			buf1[i3] = powersOf2[i2][i3];
+		for (i2 = 0; i2 < MAX_LENGTH; i2++)
+			temp1[i2] = powersOf2[i][i2];
 
-		for (i3 = 0; i3 < MAX_LENGTH; i3++)
-			buf2[i3] = powersOfVal[i2][i3];
+		for (i2 = 0; i2 < MAX_LENGTH; i2++)
+			temp2[i2] = powersOfVal[i][i2];
 
-		add(base, buf2, buf3, buf4);
+		add(base, temp2, temp3, temp4);
 
-		if (minVal(buf4, aVal) == buf4) {
-			add(base, buf1, resultBuf, resultBuf);
-			add(base, buf2, buf3, buf3);
+		if (minVal(temp4, aVal) == temp4) {
+			add(base, temp1, resultBuf, resultBuf);
+			add(base, temp2, temp3, temp3);
 		}
 
-		if (are_equal(buf4, aVal))
+		if (are_equal(temp4, aVal))
 			break;
 
-		memset(buf4, 0, sizeof(buf4));
+		memset(temp4, 0, sizeof(temp4));
 	}
 
-	for (i = 0; i < MAX_LENGTH; i++)
-		result[i] = resultBuf[i];
+	for (topPower = 0; topPower < MAX_LENGTH; topPower++)
+		result[topPower] = resultBuf[topPower];
 }
 
 
 void mod(int base, int* aVal, int* bVal, int* result) {
 
-	int buf1[MAX_LENGTH] = { 0 };
+	int temp1[MAX_LENGTH] = { 0 };
 
-	if (are_equal(buf1, bVal)) {
+	if (are_equal(temp1, bVal)) {
 		printf("\nERROR 202: Modulo by zero\n");
 		exit(1);
 	}
