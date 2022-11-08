@@ -74,7 +74,7 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
     int temp2[MAX_LENGTH] = { 0 };
     int temp3[MAX_LENGTH] = { 0 };
     int temp4[MAX_LENGTH] = { 0 };
-    int resultBuf[MAX_LENGTH] = { 0 };
+    int resultTemp[MAX_LENGTH] = { 0 };
     int powersOfVal[MAX_POW_2][MAX_LENGTH] = {{0} };
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
     int topPower, i, i2;
@@ -116,7 +116,7 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 		add(base, temp1, temp3, temp4);
 
 		if (minVal(temp4, lVal) == temp4) {
-			add(base, temp2, resultBuf, resultBuf);
+			add(base, temp2, resultTemp, resultTemp);
 			add(base, temp1, temp3, temp3);
 		}
 
@@ -126,7 +126,7 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		result[i] = resultBuf[i];
+		result[i] = resultTemp[i];
 }
 
 
@@ -136,7 +136,7 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
     int temp2[MAX_LENGTH] = { 0 };
     int temp3[MAX_LENGTH] = { 0 };
     int temp4[MAX_LENGTH] = { 0 };
-    int resultBuf[MAX_LENGTH] = { 0 };
+    int resultTemp[MAX_LENGTH] = { 0 };
     int powersOfVal[MAX_POW_2][MAX_LENGTH] = {{0} };
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
     int topPower, i, i2;
@@ -167,7 +167,7 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 		}
 	}
 
-	resultBuf[MAX_LENGTH - 1] = 1;
+    resultTemp[MAX_LENGTH - 1] = 1;
 	for (i = topPower - 1; i >= 0; i--) {
 
 		for (i2 = 0; i2 < MAX_LENGTH; i2++)
@@ -179,7 +179,7 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 		add(base, temp1, temp3, temp4);
 
 		if (minVal(temp4, bVal) == temp4) {
-			multiply(base, temp2, resultBuf, resultBuf);
+			multiply(base, temp2, resultTemp, resultTemp);
 			add(base, temp1, temp3, temp3);
 		}
 
@@ -189,16 +189,16 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 	}
 
 	if (!are_equal(bVal, temp3))
-		multiply(base, aVal, resultBuf, resultBuf);
+		multiply(base, aVal, resultTemp, resultTemp);
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		result[i] = resultBuf[i];
+		result[i] = resultTemp[i];
 }
 
 
 void subtract(int base, int* aVal, int* bVal, int* result) {
 
-    int buf[MAX_LENGTH] = { 0 };
+    int temp[MAX_LENGTH] = { 0 };
     int i;
 
 	if (minVal(bVal, aVal) == aVal) {
@@ -207,14 +207,14 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		buf[i] = aVal[i];
+		temp[i] = aVal[i];
 
 	for (i = MAX_LENGTH - 1; i >= 0; i--) {
-		if (buf[i] < bVal[i]) {
-			buf[i - 1]--;
-			buf[i] += base;
+		if (temp[i] < bVal[i]) {
+			temp[i - 1]--;
+			temp[i] += base;
 		}
-		result[i] = buf[i] - bVal[i];
+		result[i] = temp[i] - bVal[i];
 	}
 }
 
@@ -225,7 +225,7 @@ void divide(int base, int* aVal, int* bVal, int* result) {
     int temp2[MAX_LENGTH] = { 0 };
     int temp3[MAX_LENGTH] = { 0 };
     int temp4[MAX_LENGTH] = { 0 };
-    int resultBuf[MAX_LENGTH] = { 0 };
+    int resultTemp[MAX_LENGTH] = { 0 };
     int powersOfVal[MAX_POW_2][MAX_LENGTH] = {{0} };
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
     int topPower, i, i2;
@@ -278,7 +278,7 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		add(base, temp2, temp3, temp4);
 
 		if (minVal(temp4, aVal) == temp4) {
-			add(base, temp1, resultBuf, resultBuf);
+			add(base, temp1, resultTemp, resultTemp);
 			add(base, temp2, temp3, temp3);
 		}
 
@@ -288,8 +288,8 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		memset(temp4, 0, sizeof(temp4));
 	}
 
-	for (topPower = 0; topPower < MAX_LENGTH; topPower++)
-		result[topPower] = resultBuf[topPower];
+	for (i = 0; i < MAX_LENGTH; i++)
+		result[i] = resultTemp[i];
 }
 
 

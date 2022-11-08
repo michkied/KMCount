@@ -34,21 +34,21 @@ void values_to_symbols(int* values, char* resultExpression) {
 void convert_value(int targetBase, int* value) {
 
     int i = targetBase - 1;
-    int buf[MAX_LENGTH] = { 0 };
+    int temp[MAX_LENGTH] = { 0 };
     int one[MAX_LENGTH] = { 0 };
 
 	if (targetBase > value[MAX_LENGTH - 1]) return;
 
-	buf[MAX_LENGTH - 1] = targetBase - 1;
+	temp[MAX_LENGTH - 1] = targetBase - 1;
 	one[MAX_LENGTH - 1] = 1;
 
 	while (value[MAX_LENGTH - 1] != i) {
-		add(targetBase, buf, one, buf);
+		add(targetBase, temp, one, temp);
 		i++;
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
-		value[i] = buf[i];
+		value[i] = temp[i];
 }
 
 
