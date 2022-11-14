@@ -39,8 +39,16 @@ int are_equal(int* aVal, int* bVal) {
 }
 
 
-void add(int base, int *aVal, int *bVal, int *result) {
+int get_size(int* number) {
+    int i;
+    for (i=0;i<MAX_LENGTH;i++)
+        if (number[i] != 0)
+            break;
+    return MAX_LENGTH-i;
+}
 
+
+void add(int base, int *aVal, int *bVal, int *result) {
     int carry = 0;
     int i;
 
@@ -61,13 +69,11 @@ void add(int base, int *aVal, int *bVal, int *result) {
 	}
 	if (carry)
 		result[0] = carry;
-
 	add_num++;
 }
 
 
 void multiply(int base, int* aVal, int* bVal, int* result) {
-
 	int *lVal = minVal(aVal, bVal);
 	int *hVal = maxVal(aVal, bVal);
 	int temp1[MAX_LENGTH] = { 0 };
@@ -87,6 +93,13 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 			result[i] = hVal[i];
 		return;
 	}
+
+    // Ocena rozmiaru wyniku
+    if (get_size(aVal) + get_size(bVal) > MAX_LENGTH) {
+        printf("\nERROR 200: Overflow (MAX %i)\n", MAX_LENGTH);
+        exit(1);
+    }
+
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		temp2[i] = hVal[i];
@@ -131,7 +144,6 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 
 
 void exponentiate(int base, int* aVal, int* bVal, int* result) {
-
 	int temp1[MAX_LENGTH] = { 0 };
     int temp2[MAX_LENGTH] = { 0 };
     int temp3[MAX_LENGTH] = { 0 };
@@ -139,7 +151,9 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
     int resultTemp[MAX_LENGTH] = { 0 };
     int powersOfVal[MAX_POW_2][MAX_LENGTH] = {{0} };
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
-    int topPower, i, i2;
+    int topPower, baseMultiplier, i, i2;
+    int aSize = get_size(aVal);
+
 
 	if (are_equal(temp1, bVal)) {
 		result[MAX_LENGTH - 1] = 1;
@@ -152,6 +166,16 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 			result[i] = aVal[i];
 		return;
 	}
+
+    // Ocena rozmiaru wyniku
+    baseMultiplier = 1;
+    for (i=MAX_LENGTH-1;i>=0;i--) {
+        if (bVal[i] * baseMultiplier + aSize > MAX_LENGTH) {
+            printf("\nERROR 200: Overflow (MAX %i)\n", MAX_LENGTH);
+            exit(1);
+        }
+        baseMultiplier *= base;
+    }
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		temp2[i] = aVal[i];
@@ -197,7 +221,6 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 
 void subtract(int base, int* aVal, int* bVal, int* result) {
-
     int temp[MAX_LENGTH] = { 0 };
     int i;
 
@@ -220,7 +243,6 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 
 
 void divide(int base, int* aVal, int* bVal, int* result) {
-
 	int temp1[MAX_LENGTH] = { 0 };
     int temp2[MAX_LENGTH] = { 0 };
     int temp3[MAX_LENGTH] = { 0 };
@@ -294,7 +316,6 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 
 
 void mod(int base, int* aVal, int* bVal, int* result) {
-
 	int temp1[MAX_LENGTH] = { 0 };
 
 	if (are_equal(temp1, bVal)) {

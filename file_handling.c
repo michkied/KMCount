@@ -11,7 +11,6 @@ int is_digit(char character) {
     int i;
     for (i = 0; i < 10; i++)
         if (digits[i] == character) return 1;
-
     return 0;
 }
 

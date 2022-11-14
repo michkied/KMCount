@@ -24,15 +24,13 @@ int symbol_to_value(char symbol, int base, int lineNum) {
 
 void values_to_symbols(int* values, char* resultExpression) {
 	int i;
-	for (i = 0; i < MAX_LENGTH; i++) {
+	for (i = 0; i < MAX_LENGTH; i++)
 		if (values[i])
 			resultExpression[i] = symbols[values[i]];
-	}
 }
 
 
 void convert_value(int targetBase, int* value) {
-
     int i = targetBase - 1;
     int temp[MAX_LENGTH] = { 0 };
     int one[MAX_LENGTH] = { 0 };

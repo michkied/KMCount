@@ -6,8 +6,7 @@
 #include "file_handling.h"
 
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     char* filenameIn;
     char* suffix;
     char filenameOut[13];
