@@ -7,21 +7,16 @@
 
 
 int main(int argc, char *argv[]) {
-    char* filenameIn;
-    char* suffix;
-    char filenameOut[13];
-    char out_suffix[] = "_out.txt";
-    int i, pos;
+    char *filenameIn;
+    char filenameOut[] = "km_XX_out.txt";
+    int i;
     FILE *fpIn, *fpOut;
-
     int aVal[MAX_LENGTH] = { 0 };
     int bVal[MAX_LENGTH] = { 0 };
     int result[MAX_LENGTH] = { 0 };
-
     int lineNum = 0;
     int base;
     char opType;
-
     char resultExpression[MAX_LENGTH];
     char buf[MAX_LENGTH + 3];
 
@@ -31,8 +26,7 @@ int main(int argc, char *argv[]) {
     }
 
     filenameIn = argv[1];
-    suffix = strrchr(filenameIn, '_');
-    if (strcmp(suffix, "_in.txt") != 0 || strlen(filenameIn) != 12) {
+    if (strlen(filenameIn) != 12) {
         printf("\nERROR 101: Incorrect input file name format\n");
         exit(1);
     }
@@ -43,14 +37,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    pos = (int)(suffix - filenameIn);
-    for (i = 0; i < pos; i++)
-        filenameOut[i] = filenameIn[i];
-
-    while (i < 13) {
-        filenameOut[i] = out_suffix[i - 5];
-        i++;
-    }
+    filenameOut[3] = filenameIn[3];
+    filenameOut[4] = filenameIn[4];
 
     fpOut = fopen(filenameOut, "w");
     if (fpOut == NULL) {
