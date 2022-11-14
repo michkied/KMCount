@@ -17,7 +17,7 @@ int symbol_to_value(char symbol, int base, int lineNum) {
     for (i = 0; i < base; i++)
         if (symbol == symbols[i]) return i;
 
-    printf("ERROR 130: Character %c in not valid in base %i (line #%i)", symbol, base, lineNum + 1);
+    printf("\nERROR 130: Character %c in not valid in base %i (line #%i)\n", symbol, base, lineNum + 1);
     exit(1);
 }
 

@@ -26,20 +26,20 @@ int main(int argc, char *argv[]) {
     char buf[MAX_LENGTH + 3];
 
     if (argc < 2) {
-        printf("ERROR 100: Missing argument - input file");
+        printf("\nERROR 100: Missing argument - input file\n");
         exit(1);
     }
 
     filenameIn = argv[1];
     suffix = strrchr(filenameIn, '_');
     if (strcmp(suffix, "_in.txt") != 0 || strlen(filenameIn) != 12) {
-        printf("ERROR 101: Incorrect input file name format");
+        printf("\nERROR 101: Incorrect input file name format\n");
         exit(1);
     }
 
     fpIn = fopen(filenameIn, "r");
     if (fpIn == NULL) {
-        printf("ERROR 102: Unable to open input file - %s", filenameIn);
+        printf("\nERROR 102: Unable to open input file - %s\n", filenameIn);
         exit(1);
     }
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
     fpOut = fopen(filenameOut, "w");
     if (fpOut == NULL) {
-        printf("ERROR 103: Unable to create output file - %s", filenameOut);
+        printf("\nERROR 103: Unable to create output file - %s\n", filenameOut);
         exit(1);
     }
 

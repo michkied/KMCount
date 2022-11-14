@@ -29,7 +29,7 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
         i++;
     }
     if (buf[i] == '\n' || buf[i] == EOF) {
-        printf("ERROR 120: Invalid header format (line #%i)", lineNum+1);
+        printf("\nERROR 120: Invalid header format (line #%i)\n", lineNum+1);
         exit(1);
     }
 
@@ -37,7 +37,7 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     sscanf(buf, "%s%i", opT, &opB);
 
     if (opB > MAX_BASE || opB <= 1) {
-        printf("ERROR 121: Invalid operation base - %i (line #%i)", opB, lineNum+1);
+        printf("\nERROR 121: Invalid operation base - %i (line #%i)\n", opB, lineNum+1);
         exit(1);
     }
     *operationBase = opB;
@@ -49,14 +49,14 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     }
     if (*operationType == 'b') {
         if (*targetBase > MAX_BASE || *targetBase <= 1) {
-            printf("ERROR 123: Invalid target base - %i (line #%i)", *targetBase, lineNum+1);
+            printf("\nERROR 123: Invalid target base - %i (line #%i)\n", *targetBase, lineNum+1);
             exit(1);
         }
         return;
     }
 
     if (buf[1] != ' ') {
-        printf("ERROR 122: Invalid operation type (line #%i)", lineNum+1);
+        printf("\nERROR 122: Invalid operation type (line #%i)\n", lineNum+1);
         exit(1);
     }
 
@@ -67,7 +67,7 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
         }
     }
 
-    printf("ERROR 122: Invalid operation type (line #%i)", lineNum+1);
+    printf("\nERROR 122: Invalid operation type (line #%i)\n", lineNum+1);
     exit(1);
 }
 
@@ -86,7 +86,7 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
         if (finish) return operationType;
 
         if (buf[MAX_LENGTH + 2] != '_') {
-            printf("ERROR 110: Input line #%i is too long", lineNum+startFromLine + 1);
+            printf("\nERROR 110: Input line #%i is too long\n", lineNum+startFromLine + 1);
             exit(1);
         }
 
@@ -123,7 +123,7 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
         memset(buf, '_', sizeof(buf));
     }
 
-    printf("ERROR 111: Input format invalid (line #%i)", lineNum+startFromLine + 1);
+    printf("\nERROR 111: Input format invalid (line #%i)\n", lineNum+startFromLine + 1);
     exit(1);
 }
 
