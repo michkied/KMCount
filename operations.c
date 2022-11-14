@@ -4,8 +4,6 @@
 #include "operations.h"
 #include "conversions.h"
 
-int add_num = 0;
-
 
 int* minVal(int* aVal, int* bVal) {
 	int i;
@@ -69,7 +67,6 @@ void add(int base, int *aVal, int *bVal, int *result) {
 	}
 	if (carry)
 		result[0] = carry;
-	add_num++;
 }
 
 
