@@ -80,12 +80,15 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
     char operationType;
     int finish = 0;
     char buf[MAX_LENGTH + 3];
+    int hasData = 0;
     memset(buf, '_', sizeof(buf));
 
     for (lineNum=0; fgets(buf, MAX_LENGTH + 3, fpIn) != NULL; lineNum++) {
         fprintf(fpOut, "%s", buf);
 
         if (finish) return operationType;
+
+        if (buf[0] != '\n') hasData = 1; else continue;
 
         if (buf[MAX_LENGTH + 2] != '_') {
             printf("\nERROR 110: Input line #%i is too long\n", lineNum+startFromLine + 1);
@@ -110,8 +113,8 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
             }
         }
 
-        i2 = MAX_LENGTH - 1;
         if (lineNum == 4) {
+            i2 = MAX_LENGTH - 1;
             for (i = MAX_LENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase, lineNum+startFromLine);
                 if (value == -1) continue;
@@ -125,7 +128,12 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
         memset(buf, '_', sizeof(buf));
     }
 
-    printf("\nERROR 111: Input format invalid (line #%i)\n", lineNum+startFromLine + 1);
+    if (!hasData) {
+        printf("\nSuccess!\n");
+        exit(0);
+    }
+
+    printf("\nERROR 111: Input format invalid\n");
     exit(1);
 }
 
