@@ -17,7 +17,7 @@ int is_digit(char character) {
 
 void get_header(char* buf, int lineNum, char* operationType, int* operationBase, int* targetBase) {
     int i = 0;
-    int opB;
+    int base, base2 = 0;
     char opT[MAX_LENGTH];
 
     while (buf[i] != '\n' && buf[i] != EOF) {
@@ -34,26 +34,28 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     }
 
     memset(opT, '_', sizeof(opT));
-    sscanf(buf, "%s%i", opT, &opB);
+    sscanf(buf, "%s%i", opT, &base);
 
-    if (opB > MAX_BASE || opB <= 1) {
-        printf("\nERROR 121: Invalid operation base - %i (line #%i)\n", opB, lineNum+1);
+    if (base > MAX_BASE || base <= 1) {
+        printf("\nERROR 121: Invalid operation base - %i (line #%i)\n", base, lineNum+1);
         exit(1);
     }
-    *operationBase = opB;
 
     for (i = 0; is_digit(opT[i]); i++) {
-        *targetBase *= 10;
-        *targetBase += opT[i] - '0';
+        base2 *= 10;
+        base2 += opT[i] - '0';
         *operationType = 'b';
     }
     if (*operationType == 'b') {
+        *targetBase = base;
+        *operationBase = base2;
         if (*targetBase > MAX_BASE || *targetBase <= 1) {
             printf("\nERROR 123: Invalid target base - %i (line #%i)\n", *targetBase, lineNum+1);
             exit(1);
         }
         return;
     }
+    *operationBase = base;
 
     if (buf[1] != ' ') {
         printf("\nERROR 122: Invalid operation type (line #%i)\n", lineNum+1);
