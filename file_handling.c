@@ -17,7 +17,7 @@ int is_digit(char character) {
 
 void get_header(char* buf, int lineNum, char* operationType, int* operationBase, int* targetBase) {
     int i = 0;
-    int opB;
+    int base, base2 = 0;
     char opT[MAX_LENGTH];
 
     while (buf[i] != '\n' && buf[i] != EOF) {
@@ -34,26 +34,28 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     }
 
     memset(opT, '_', sizeof(opT));
-    sscanf(buf, "%s%i", opT, &opB);
+    sscanf(buf, "%s%i", opT, &base);
 
-    if (opB > MAX_BASE || opB <= 1) {
-        printf("\nERROR 121: Invalid operation base - %i (line #%i)\n", opB, lineNum+1);
+    if (base > MAX_BASE || base <= 1) {
+        printf("\nERROR 121: Invalid operation base - %i (line #%i)\n", base, lineNum+1);
         exit(1);
     }
-    *operationBase = opB;
 
     for (i = 0; is_digit(opT[i]); i++) {
-        *targetBase *= 10;
-        *targetBase += opT[i] - '0';
+        base2 *= 10;
+        base2 += opT[i] - '0';
         *operationType = 'b';
     }
     if (*operationType == 'b') {
+        *targetBase = base;
+        *operationBase = base2;
         if (*targetBase > MAX_BASE || *targetBase <= 1) {
             printf("\nERROR 123: Invalid target base - %i (line #%i)\n", *targetBase, lineNum+1);
             exit(1);
         }
         return;
     }
+    *operationBase = base;
 
     if (buf[1] != ' ') {
         printf("\nERROR 122: Invalid operation type (line #%i)\n", lineNum+1);
@@ -78,12 +80,15 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
     char operationType;
     int finish = 0;
     char buf[MAX_LENGTH + 3];
+    int hasData = 0;
     memset(buf, '_', sizeof(buf));
 
     for (lineNum=0; fgets(buf, MAX_LENGTH + 3, fpIn) != NULL; lineNum++) {
         fprintf(fpOut, "%s", buf);
 
         if (finish) return operationType;
+        if (buf[0] != '\n') hasData = 1; else continue;
+        if (lineNum > 4) break;
 
         if (buf[MAX_LENGTH + 2] != '_') {
             printf("\nERROR 110: Input line #%i is too long\n", lineNum+startFromLine + 1);
@@ -108,8 +113,8 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
             }
         }
 
-        i2 = MAX_LENGTH - 1;
         if (lineNum == 4) {
+            i2 = MAX_LENGTH - 1;
             for (i = MAX_LENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase, lineNum+startFromLine);
                 if (value == -1) continue;
@@ -123,7 +128,12 @@ char get_operation(FILE *fpIn, FILE *fpOut, int startFromLine, int *operationBas
         memset(buf, '_', sizeof(buf));
     }
 
-    printf("\nERROR 111: Input format invalid (line #%i)\n", lineNum+startFromLine + 1);
+    if (!hasData) {
+        printf("\nSuccess!\n");
+        exit(0);
+    }
+
+    printf("\nERROR 111: Input format invalid\n");
     exit(1);
 }
 

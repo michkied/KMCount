@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
     char *filenameIn;
-    char filenameOut[] = "km_XX_out.txt";
+    char filenameOut[] = "XX_XX_out.txt";
     int i;
     FILE *fpIn, *fpOut;
     int aVal[MAX_LENGTH] = { 0 };
@@ -37,6 +37,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    filenameOut[0] = filenameIn[0];
+    filenameOut[1] = filenameIn[1];
     filenameOut[3] = filenameIn[3];
     filenameOut[4] = filenameIn[4];
 
