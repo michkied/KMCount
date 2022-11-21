@@ -7,9 +7,8 @@
 #define FILENAME_LEN 12
 
 int main(int argc, char *argv[]) {
-    char *filenamePath;
+    char *filenamePath, *filenameIn;
     char filenameOut[] = "XX_XX_out.txt";
-    char *filenameIn;
     unsigned int pathLen;
     int i = 0;
     FILE *fpIn, *fpOut;
