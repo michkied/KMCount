@@ -4,12 +4,14 @@
 #include "operations.h"
 #include "conversions.h"
 #include "file_handling.h"
-
+#define FILENAME_LEN 12
 
 int main(int argc, char *argv[]) {
-    char *filenameIn;
+    char *filenamePath;
     char filenameOut[] = "XX_XX_out.txt";
-    int i;
+    char *filenameIn;
+    unsigned int pathLen;
+    int i = 0;
     FILE *fpIn, *fpOut;
     int aVal[MAX_LENGTH] = { 0 };
     int bVal[MAX_LENGTH] = { 0 };
@@ -25,23 +27,36 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    filenameIn = argv[1];
-    if (strlen(filenameIn) != 12) {
+    filenamePath = argv[1];
+    pathLen = (unsigned int) strlen(filenamePath);
+    if (pathLen < FILENAME_LEN) {
         printf("\nERROR 101: Incorrect input file name format\n");
         exit(1);
     }
+    if (pathLen != FILENAME_LEN) {
+        filenameIn = strrchr(filenamePath, '/');
+        if (filenameIn == NULL)
+            filenameIn = strrchr(filenamePath, '\\');
 
-    fpIn = fopen(filenameIn, "r");
+        if (filenameIn == NULL || strlen(filenameIn) != FILENAME_LEN+1) {
+            printf("\nERROR 101: Incorrect input file name format\n");
+            exit(1);
+        }
+        i++;
+    }
+    else {
+        filenameIn = filenamePath;
+    }
+    filenameOut[0] = filenameIn[i];
+    filenameOut[1] = filenameIn[i+1];
+    filenameOut[3] = filenameIn[i+3];
+    filenameOut[4] = filenameIn[i+4];
+
+    fpIn = fopen(filenamePath, "r");
     if (fpIn == NULL) {
-        printf("\nERROR 102: Unable to open input file - %s\n", filenameIn);
+        printf("\nERROR 102: Unable to open input file - %s\n", filenamePath);
         exit(1);
     }
-
-    filenameOut[0] = filenameIn[0];
-    filenameOut[1] = filenameIn[1];
-    filenameOut[3] = filenameIn[3];
-    filenameOut[4] = filenameIn[4];
-
     fpOut = fopen(filenameOut, "w");
     if (fpOut == NULL) {
         printf("\nERROR 103: Unable to create output file - %s\n", filenameOut);
