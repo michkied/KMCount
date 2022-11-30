@@ -6,6 +6,8 @@
 #include "file_handling.h"
 #define FILENAME_LEN 12
 
+int is_done(char*, FILE*);
+
 int is_done(char* buf, FILE* fpIn) {
     int i;
     for (i = 2; i > 0; i--) {
