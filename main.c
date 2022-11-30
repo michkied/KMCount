@@ -6,6 +6,16 @@
 #include "file_handling.h"
 #define FILENAME_LEN 12
 
+int is_done(char* buf, FILE* fpIn) {
+    int i;
+    for (i = 2; i > 0; i--) {
+        if (fgets(buf, MAX_LENGTH + 3, fpIn) == NULL) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
     char *filenamePath, *filenameIn;
     char filenameOut[] = "XX_XX_out.txt";
@@ -62,7 +72,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    while (1) {
+    do {
         memset(resultExpression, '0', sizeof(resultExpression));
         memset(result, 0, sizeof(result));
         memset(aVal, 0, sizeof(aVal));
@@ -100,11 +110,8 @@ int main(int argc, char *argv[]) {
         lineNum += 8;
 
         memset(buf, '_', sizeof(buf));
-        for (i = 2; i > 0; i--) {
-            if (fgets(buf, MAX_LENGTH + 3, fpIn) == NULL) {
-                printf("\nSuccess!\n");
-                return 0;
-            }
-        }
-    }
+    } while (!is_done(buf, fpIn));
+
+    printf("\nSuccess!\n");
+    return 0;
 }
