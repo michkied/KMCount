@@ -4,7 +4,9 @@
 #include "conversions.h"
 #include "file_handling.h"
 
-char mathOperations[NUMBER_OF_OPERATIONS] = "+-*/^%";
+#define FILENAME_LEN 12
+#define OPERATORS "+-*/^%"
+
 
 int is_digit(char character) {
     char digits[10] = "0123456789";
@@ -12,6 +14,48 @@ int is_digit(char character) {
     for (i = 0; i < 10; i++)
         if (digits[i] == character) return 1;
     return 0;
+}
+
+
+void get_io_files(char* fnamePath, FILE** fpIn, FILE** fpOut) {
+    unsigned int pathLen = strlen(fnamePath);
+    char* fnameIn;
+    char fnameOut[] = "XX_XX_out.txt";
+    int i = 0;
+
+    if (pathLen < FILENAME_LEN) {
+        printf("\nERROR 101: Incorrect input file name format\n");
+        exit(1);
+    }
+    if (pathLen != FILENAME_LEN) {
+        fnameIn = strrchr(fnamePath, '/');
+        if (fnameIn == NULL)
+            fnameIn = strrchr(fnamePath, '\\');
+
+        if (fnameIn == NULL || strlen(fnameIn) != FILENAME_LEN + 1) {
+            printf("\nERROR 101: Incorrect input file name format\n");
+            exit(1);
+        }
+        i++;
+    }
+    else {
+        fnameIn = fnamePath;
+    }
+    fnameOut[0] = fnameIn[i];
+    fnameOut[1] = fnameIn[i+1];
+    fnameOut[3] = fnameIn[i+3];
+    fnameOut[4] = fnameIn[i+4];
+
+    *fpIn = fopen(fnamePath, "r");
+    if (fpIn == NULL) {
+        printf("\nERROR 102: Unable to open input file - %s\n", fnamePath);
+        exit(1);
+    }
+    *fpOut = fopen(fnameOut, "w");
+    if (fpOut == NULL) {
+        printf("\nERROR 103: Unable to create output file - %s\n", fnameOut);
+        exit(1);
+    }
 }
 
 
@@ -63,8 +107,8 @@ void get_header(char* buf, int lineNum, char* operationType, int* operationBase,
     }
 
     for (i = 0; i < NUMBER_OF_OPERATIONS; i++) {
-        if (buf[0] == mathOperations[i]) {
-            *operationType = mathOperations[i];
+        if (buf[0] == OPERATORS[i]) {
+            *operationType = OPERATORS[i];
             return;
         }
     }

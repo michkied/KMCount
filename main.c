@@ -4,7 +4,6 @@
 #include "operations.h"
 #include "conversions.h"
 #include "file_handling.h"
-#define FILENAME_LEN 12
 
 int is_done(char*, FILE*);
 
@@ -19,60 +18,21 @@ int is_done(char* buf, FILE* fpIn) {
 }
 
 int main(int argc, char *argv[]) {
-    char *filenamePath, *filenameIn;
-    char filenameOut[] = "XX_XX_out.txt";
-    unsigned int pathLen;
-    int i = 0;
     FILE *fpIn, *fpOut;
     int aVal[MAX_LENGTH] = { 0 };
     int bVal[MAX_LENGTH] = { 0 };
     int result[MAX_LENGTH] = { 0 };
-    int lineNum = 0;
-    int base;
-    char opType;
     char resultExpression[MAX_LENGTH];
     char buf[MAX_LENGTH + 3];
+    int lineNum = 0, base, i;
+    char opType;
 
     if (argc < 2) {
         printf("\nERROR 100: Missing argument - input file\n");
         exit(1);
     }
 
-    filenamePath = argv[1];
-    pathLen = (unsigned int) strlen(filenamePath);
-    if (pathLen < FILENAME_LEN) {
-        printf("\nERROR 101: Incorrect input file name format\n");
-        exit(1);
-    }
-    if (pathLen != FILENAME_LEN) {
-        filenameIn = strrchr(filenamePath, '/');
-        if (filenameIn == NULL)
-            filenameIn = strrchr(filenamePath, '\\');
-
-        if (filenameIn == NULL || strlen(filenameIn) != FILENAME_LEN+1) {
-            printf("\nERROR 101: Incorrect input file name format\n");
-            exit(1);
-        }
-        i++;
-    }
-    else {
-        filenameIn = filenamePath;
-    }
-    filenameOut[0] = filenameIn[i];
-    filenameOut[1] = filenameIn[i+1];
-    filenameOut[3] = filenameIn[i+3];
-    filenameOut[4] = filenameIn[i+4];
-
-    fpIn = fopen(filenamePath, "r");
-    if (fpIn == NULL) {
-        printf("\nERROR 102: Unable to open input file - %s\n", filenamePath);
-        exit(1);
-    }
-    fpOut = fopen(filenameOut, "w");
-    if (fpOut == NULL) {
-        printf("\nERROR 103: Unable to create output file - %s\n", filenameOut);
-        exit(1);
-    }
+    get_io_files(argv[1], &fpIn, &fpOut);
 
     do {
         memset(resultExpression, '0', sizeof(resultExpression));
@@ -111,8 +71,8 @@ int main(int argc, char *argv[]) {
         values_to_symbols(result, resultExpression);
         output_result(fpOut, resultExpression);
         lineNum += 8;
-
         memset(buf, '_', sizeof(buf));
+
     } while (!is_done(buf, fpIn));
 
     printf("\nSuccess!\n");

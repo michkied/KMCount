@@ -4,9 +4,7 @@
 #include "conversions.h"
 #include "operations.h"
 
-const char symbols[MAX_BASE] = {
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-};
+#define SYMBOLS "0123456789ABCDEF"
 
 
 int symbol_to_value(char symbol, int base, int lineNum) {
@@ -15,7 +13,7 @@ int symbol_to_value(char symbol, int base, int lineNum) {
     if (symbol == '_' || symbol == '\n' || symbol == '\000') return -1;
 
     for (i = 0; i < base; i++)
-        if (symbol == symbols[i]) return i;
+        if (symbol == SYMBOLS[i]) return i;
 
     printf("\nERROR 130: Character %c is not valid in base %i (line #%i)\n", symbol, base, lineNum + 1);
     exit(1);
@@ -26,7 +24,7 @@ void values_to_symbols(int* values, char* resultExpression) {
 	int i;
 	for (i = 0; i < MAX_LENGTH; i++)
 		if (values[i])
-			resultExpression[i] = symbols[values[i]];
+			resultExpression[i] = SYMBOLS[values[i]];
 }
 
 
