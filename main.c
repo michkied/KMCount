@@ -82,30 +82,31 @@ int main(int argc, char *argv[]) {
 
         opType = get_operation(fpIn, fpOut, lineNum, &base, aVal, bVal);
 
-        if (opType == 'b') {
-            convert_bases(base, bVal[0], aVal);
-            for (i = 0; i < MAX_LENGTH; i++)
-                result[i] = aVal[i];
-            lineNum -= 2;
+        switch (opType) {
+            case 'b':
+                convert_bases(base, bVal[0], aVal);
+                for (i = 0; i < MAX_LENGTH; i++)
+                    result[i] = aVal[i];
+                lineNum -= 2;
+
+            case '+':
+                add(base, aVal, bVal, result);
+
+            case '-':
+                subtract(base, aVal, bVal, result);
+
+            case '*' :
+                multiply(base, aVal, bVal, result);
+
+            case '/' :
+                divide(base, aVal, bVal, result);
+
+            case '^' :
+                exponentiate(base, aVal, bVal, result);
+
+            case '%' :
+                mod(base, aVal, bVal, result);
         }
-
-        else if (opType == '+')
-            add(base, aVal, bVal, result);
-
-        else if (opType == '-')
-            subtract(base, aVal, bVal, result);
-
-        else if (opType == '*')
-            multiply(base, aVal, bVal, result);
-
-        else if (opType == '/')
-            divide(base, aVal, bVal, result);
-
-        else if (opType == '^')
-            exponentiate(base, aVal, bVal, result);
-
-        else if (opType == '%')
-            mod(base, aVal, bVal, result);
 
         values_to_symbols(result, resultExpression);
         output_result(fpOut, resultExpression);
