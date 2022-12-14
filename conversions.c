@@ -3,8 +3,6 @@
 #include "conversions.h"
 #include "operations.h"
 
-#define SYMBOLS "0123456789ABCDEF"
-
 
 int symbol_to_value(char symbol, int base) {
     int i;

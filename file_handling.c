@@ -4,9 +4,6 @@
 #include "conversions.h"
 #include "file_handling.h"
 
-#define FILENAME_LEN 12
-#define OPERATORS "+-*/^%"
-
 
 int is_digit(char character) {
     char digits[10] = "0123456789";
@@ -89,12 +86,12 @@ int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* ope
     if (*operationType == 'b') {
         *targetBase = base;
         *operationBase = base2;
-        if (*targetBase > MAX_BASE || *targetBase <= 1) {
+        if (*targetBase > strlen(SYMBOLS) || *targetBase <= 1) {
             skip_lines(fpIn, fpOut, 3);
             fprintf(fpOut,"ERROR 123: Invalid target base - %i\n", *targetBase);
             return 1;
         }
-        if (*operationBase > MAX_BASE || *operationBase <= 1) {
+        if (*operationBase > strlen(SYMBOLS) || *operationBase <= 1) {
             skip_lines(fpIn, fpOut, 3);
             fprintf(fpOut,"ERROR 121: Invalid operation base - %i\n\n", *operationBase);
             return 1;
@@ -102,7 +99,7 @@ int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* ope
         return 0;
     }
 
-    if (base > MAX_BASE || base <= 1) {
+    if (base > strlen(SYMBOLS) || base <= 1) {
         skip_lines(fpIn, fpOut, 5);
         fprintf(fpOut,"ERROR 121: Invalid operation base - %i\n\n", base);
         return 1;

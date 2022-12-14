@@ -1,3 +1,5 @@
+#define FILENAME_LEN 12
+#define OPERATORS "+-*/^%"
 
 void get_io_files(char*, FILE**, FILE**);
 
