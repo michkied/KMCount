@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "conversions.h"
 #include "operations.h"
@@ -7,16 +6,12 @@
 #define SYMBOLS "0123456789ABCDEF"
 
 
-int symbol_to_value(char symbol, int base, int lineNum) {
+int symbol_to_value(char symbol, int base) {
     int i;
-
     if (symbol == '_' || symbol == '\n' || symbol == '\000') return -1;
-
     for (i = 0; i < base; i++)
         if (symbol == SYMBOLS[i]) return i;
-
-    printf("\nERROR 130: Character %c is not valid in base %i (line #%i)\n", symbol, base, lineNum + 1);
-    exit(1);
+    return -2;
 }
 
 
@@ -28,47 +23,49 @@ void values_to_symbols(int* values, char* resultExpression) {
 }
 
 
-void convert_value(int targetBase, int* value) {
+int convert_value(FILE* fpOut, int targetBase, int* value) {
     int i = targetBase - 1;
     int temp[MAX_LENGTH] = { 0 };
     int one[MAX_LENGTH] = { 0 };
 
-	if (targetBase > value[MAX_LENGTH - 1]) return;
+	if (targetBase > value[MAX_LENGTH - 1]) return 0;
 
 	temp[MAX_LENGTH - 1] = targetBase - 1;
 	one[MAX_LENGTH - 1] = 1;
 
 	while (value[MAX_LENGTH - 1] != i) {
-		add(targetBase, temp, one, temp);
+        if (add(fpOut, targetBase, temp, one, temp)) return 1;
 		i++;
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		value[i] = temp[i];
+    return 0;
 }
 
 
-void convert_bases(int currentBase, int targetBase, int* values) {
+int convert_bases(FILE* fpOut, int currentBase, int targetBase, int* values) {
     int i;
     int baseRep[MAX_LENGTH] = { 0 };
     int temp1[MAX_LENGTH] = { 0 };
     int temp2[MAX_LENGTH] = { 0 };
 
-	if (targetBase == currentBase) return;
+	if (targetBase == currentBase) return 0;
 
 	baseRep[MAX_LENGTH - 1] = currentBase;
-	convert_value(targetBase, baseRep);
+	if (convert_value(fpOut, targetBase, baseRep)) return 1;
 
 	for (i = 0; i < MAX_LENGTH; i++) {
 		temp2[MAX_LENGTH - 1] = values[i];
 
-		convert_value(targetBase, temp2);
-		multiply(targetBase, temp1, baseRep, temp1);
-		add(targetBase, temp1, temp2, temp1);
+		if (convert_value(fpOut, targetBase, temp2)) return 1;
+        if (multiply(fpOut, targetBase, temp1, baseRep, temp1)) return 1;
+        if (add(fpOut, targetBase, temp1, temp2, temp1)) return 1;
 
 		memset(temp2, 0, sizeof(temp2));
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		values[i] = temp1[i];
+    return 0;
 }

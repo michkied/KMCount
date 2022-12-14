@@ -9,6 +9,7 @@ int is_done(char*, FILE*);
 
 int is_done(char* buf, FILE* fpIn) {
     int i;
+    memset(buf, '_', sizeof(*buf));
     for (i = 2; i > 0; i--) {
         if (fgets(buf, MAX_LENGTH + 3, fpIn) == NULL) {
             return 1;
@@ -24,11 +25,11 @@ int main(int argc, char *argv[]) {
     int result[MAX_LENGTH] = { 0 };
     char resultExpression[MAX_LENGTH];
     char buf[MAX_LENGTH + 3];
-    int lineNum = 0, base, i;
+    int base, i, errNum = 0, opNum = 0;
     char opType;
 
     if (argc < 2) {
-        printf("\nERROR 100: Missing argument - input file\n");
+        printf("\nCRITICAL ERROR 100: Missing argument - input file\n");
         exit(1);
     }
 
@@ -40,41 +41,53 @@ int main(int argc, char *argv[]) {
         memset(aVal, 0, sizeof(aVal));
         memset(bVal, 0, sizeof(bVal));
 
-        opType = get_operation(fpIn, fpOut, lineNum, &base, aVal, bVal);
+        opNum++;
+        opType = get_operation(fpIn, fpOut, &base, aVal, bVal, errNum, opNum);
 
         switch (opType) {
+            case 'E' :
+                errNum++;
+                continue;
+
             case 'b':
-                convert_bases(base, bVal[0], aVal);
+                if (convert_bases(fpOut, base, bVal[0], aVal)) {errNum++;continue;}
                 for (i = 0; i < MAX_LENGTH; i++)
                     result[i] = aVal[i];
-                lineNum -= 2;
+                break;
 
             case '+':
-                add(base, aVal, bVal, result);
+                if (add(fpOut, base, aVal, bVal, result)) {errNum++;continue;}
+                break;
 
             case '-':
-                subtract(base, aVal, bVal, result);
+                if (subtract(fpOut, base, aVal, bVal, result)) {errNum++;continue;}
+                break;
 
             case '*' :
-                multiply(base, aVal, bVal, result);
+                if (multiply(fpOut, base, aVal, bVal, result)) {errNum++;continue;}
+                break;
 
             case '/' :
-                divide(base, aVal, bVal, result);
+                if (divide(fpOut, base, aVal, bVal, result)) {errNum++;continue;}
+                break;
 
             case '^' :
-                exponentiate(base, aVal, bVal, result);
+                if (exponentiate(fpOut, base, aVal, bVal, result)) {errNum++;continue;}
+                break;
 
             case '%' :
-                mod(base, aVal, bVal, result);
+                if (mod(fpOut, base, aVal, bVal, result)) {errNum++;continue;}
+                break;
         }
 
         values_to_symbols(result, resultExpression);
         output_result(fpOut, resultExpression);
-        lineNum += 8;
-        memset(buf, '_', sizeof(buf));
 
     } while (!is_done(buf, fpIn));
 
-    printf("\nSuccess!\n");
+    if (errNum)
+        printf("\nFinished with %i non-critical error(s)\n", errNum);
+    else
+        printf("\nFinished with no errors\n");
     return 0;
 }

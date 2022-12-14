@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "operations.h"
 #include "conversions.h"
@@ -46,13 +45,13 @@ int get_size(int* number) {
 }
 
 
-void add(int base, int *aVal, int *bVal, int *result) {
+int add(FILE* fpOut, int base, int *aVal, int *bVal, int *result) {
     int carry = 0;
     int i;
 
 	if (aVal[0] + bVal[0] >= base) {
-		printf("\nERROR 200: Overflow (MAX %i)\n", MAX_LENGTH);
-		exit(1);
+		fprintf(fpOut,"ERROR 200: Overflow (MAX %i)\n\n", MAX_LENGTH);
+		return 1;
 	}
 
 	for (i = MAX_LENGTH - 1; i >= 0; i--) {
@@ -67,10 +66,11 @@ void add(int base, int *aVal, int *bVal, int *result) {
 	}
 	if (carry)
 		result[0] = carry;
+    return 0;
 }
 
 
-void multiply(int base, int* aVal, int* bVal, int* result) {
+int multiply(FILE* fpOut, int base, int* aVal, int* bVal, int* result) {
 	int *lVal = minVal(aVal, bVal);
 	int *hVal = maxVal(aVal, bVal);
 	int temp1[MAX_LENGTH] = { 0 };
@@ -82,19 +82,19 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
     int powersOf2[MAX_POW_2][MAX_LENGTH] = {{0} };
     int topPower, i, i2;
 
-	if (are_equal(temp1, lVal)) return;
+	if (are_equal(temp1, lVal)) return 0;
 
 	temp1[MAX_LENGTH - 1] = 1;
 	if (are_equal(temp1, lVal)) {
 		for (i = 0; i < MAX_LENGTH; i++)
 			result[i] = hVal[i];
-		return;
+		return 0;
 	}
 
     // Ocena rozmiaru wyniku
     if (get_size(aVal) + get_size(bVal) > MAX_LENGTH) {
-        printf("\nERROR 200: Overflow (MAX %i)\n", MAX_LENGTH);
-        exit(1);
+        fprintf(fpOut, "ERROR 200: Overflow (MAX %i)\n\n", MAX_LENGTH);
+        return 1;
     }
 
 
@@ -106,11 +106,11 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 		powersOfVal[0][i] = temp2[i];
 
 	for (topPower = 1; lVal != minVal(lVal, temp1); topPower++) {
-		add(base, temp1, temp1, temp1);
+		if (add(fpOut, base, temp1, temp1, temp1)) return 1;
 		for (i = 0; i < MAX_LENGTH; i++)
 			powersOf2[topPower][i] = temp1[i];
 
-		add(base, temp2, temp2, temp2);
+		if (add(fpOut, base, temp2, temp2, temp2)) return 1;
 		for (i = 0; i < MAX_LENGTH; i++)
 			powersOfVal[topPower][i] = temp2[i];
 	}
@@ -123,11 +123,11 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 		for (i2 = 0; i2 < MAX_LENGTH; i2++)
 			temp2[i2] = powersOfVal[i][i2];
 
-		add(base, temp1, temp3, temp4);
+		if (add(fpOut, base, temp1, temp3, temp4)) return 1;
 
 		if (minVal(temp4, lVal) == temp4) {
-			add(base, temp2, resultTemp, resultTemp);
-			add(base, temp1, temp3, temp3);
+			if (add(fpOut, base, temp2, resultTemp, resultTemp)) return 1;
+			if (add(fpOut, base, temp1, temp3, temp3)) return 1;
 		}
 
 		if (are_equal(temp4, lVal)) break;
@@ -137,10 +137,11 @@ void multiply(int base, int* aVal, int* bVal, int* result) {
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		result[i] = resultTemp[i];
+    return 0;
 }
 
 
-void exponentiate(int base, int* aVal, int* bVal, int* result) {
+int exponentiate(FILE* fpOut, int base, int* aVal, int* bVal, int* result) {
 	int temp1[MAX_LENGTH] = { 0 };
     int temp2[MAX_LENGTH] = { 0 };
     int temp3[MAX_LENGTH] = { 0 };
@@ -154,22 +155,22 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 
 	if (are_equal(temp1, bVal)) {
 		result[MAX_LENGTH - 1] = 1;
-		return;
+		return 0;
 	}
 
 	temp1[MAX_LENGTH - 1] = 1;
 	if (are_equal(temp1, bVal)) {
 		for (i = 0; i < MAX_LENGTH; i++)
 			result[i] = aVal[i];
-		return;
+		return 0;
 	}
 
     // Ocena rozmiaru wyniku
     baseMultiplier = 1;
     for (i=MAX_LENGTH-1;i>=0;i--) {
         if (bVal[i] * baseMultiplier + aSize > MAX_LENGTH) {
-            printf("\nERROR 200: Overflow (MAX %i)\n", MAX_LENGTH);
-            exit(1);
+            fprintf(fpOut, "ERROR 200: Overflow (MAX %i)\n\n", MAX_LENGTH);
+            return 1;
         }
         baseMultiplier *= base;
     }
@@ -178,11 +179,11 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 		temp2[i] = aVal[i];
 
 	for (topPower = 0; bVal != minVal(bVal, temp1); topPower++) {
-		add(base, temp1, temp1, temp1);
+		if (add(fpOut, base, temp1, temp1, temp1)) return 1;
 		for (i = 0; i < MAX_LENGTH; i++)
 			powersOf2[topPower][i] = temp1[i];
 
-		multiply(base, temp2, temp2, temp2);
+		if (multiply(fpOut, base, temp2, temp2, temp2)) return 1;
 		for (i = 0; i < MAX_LENGTH; i++) {
 			powersOfVal[topPower][i] = temp2[i];
 		}
@@ -197,11 +198,11 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 		for (i2 = 0; i2 < MAX_LENGTH; i2++)
 			temp2[i2] = powersOfVal[i][i2];
 
-		add(base, temp1, temp3, temp4);
+		if (add(fpOut, base, temp1, temp3, temp4)) return 1;
 
 		if (minVal(temp4, bVal) == temp4) {
-			multiply(base, temp2, resultTemp, resultTemp);
-			add(base, temp1, temp3, temp3);
+			if (multiply(fpOut, base, temp2, resultTemp, resultTemp)) return 1;
+			if (add(fpOut, base, temp1, temp3, temp3)) return 1;
 		}
 
 		if (are_equal(temp4, bVal)) break;
@@ -210,20 +211,21 @@ void exponentiate(int base, int* aVal, int* bVal, int* result) {
 	}
 
 	if (!are_equal(bVal, temp3))
-		multiply(base, aVal, resultTemp, resultTemp);
+		if (multiply(fpOut, base, aVal, resultTemp, resultTemp)) return 1;
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		result[i] = resultTemp[i];
+    return 0;
 }
 
 
-void subtract(int base, int* aVal, int* bVal, int* result) {
+int subtract(FILE* fpOut, int base, int* aVal, int* bVal, int* result) {
     int temp[MAX_LENGTH] = { 0 };
     int i;
 
 	if (minVal(bVal, aVal) == aVal) {
-		printf("\nERROR 201: Subtraction argument error\n");
-		exit(1);
+		fprintf(fpOut, "ERROR 201: Subtraction argument error\n\n");
+		return 1;
 	}
 
 	for (i = 0; i < MAX_LENGTH; i++)
@@ -236,10 +238,11 @@ void subtract(int base, int* aVal, int* bVal, int* result) {
 		}
 		result[i] = temp[i] - bVal[i];
 	}
+    return 0;
 }
 
 
-void divide(int base, int* aVal, int* bVal, int* result) {
+int divide(FILE* fpOut, int base, int* aVal, int* bVal, int* result) {
 	int temp1[MAX_LENGTH] = { 0 };
     int temp2[MAX_LENGTH] = { 0 };
     int temp3[MAX_LENGTH] = { 0 };
@@ -250,24 +253,24 @@ void divide(int base, int* aVal, int* bVal, int* result) {
     int topPower, i, i2;
 
 	if (are_equal(temp1, bVal)) {
-		printf("\nERROR 202: Division by zero\n");
-		exit(1);
+		fprintf(fpOut,"ERROR 202: Division by zero\n\n");
+		return 1;
 	}
 
 	temp1[MAX_LENGTH - 1] = 1;
 	if (are_equal(temp1, bVal)) {
 		for (i = 0; i < MAX_LENGTH; i++)
 			result[i] = aVal[i];
-		return;
+		return 0;
 	}
 
     if (are_equal(aVal, bVal)) {
         for (i = 0; i < MAX_LENGTH; i++)
             result[i] = temp1[i];
-        return;
+        return 0;
     }
 
-    if (minVal(aVal, bVal) == aVal) return;
+    if (minVal(aVal, bVal) == aVal) return 0;
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		temp2[i] = bVal[i];
@@ -277,11 +280,11 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		powersOfVal[0][i] = temp2[i];
 
 	for (topPower = 1; aVal != minVal(aVal, temp2); topPower++) {
-		add(base, temp1, temp1, temp1);
+		if (add(fpOut, base, temp1, temp1, temp1)) return 1;
 		for (i = 0; i < MAX_LENGTH; i++)
 			powersOf2[topPower][i] = temp1[i];
 
-		add(base, temp2, temp2, temp2);
+		if (add(fpOut, base, temp2, temp2, temp2)) return 1;
 		for (i = 0; i < MAX_LENGTH; i++)
 			powersOfVal[topPower][i] = temp2[i];
 	}
@@ -294,11 +297,11 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 		for (i2 = 0; i2 < MAX_LENGTH; i2++)
 			temp2[i2] = powersOfVal[i][i2];
 
-		add(base, temp2, temp3, temp4);
+		if (add(fpOut, base, temp2, temp3, temp4)) return 1;
 
 		if (minVal(temp4, aVal) == temp4) {
-			add(base, temp1, resultTemp, resultTemp);
-			add(base, temp2, temp3, temp3);
+			if (add(fpOut, base, temp1, resultTemp, resultTemp)) return 1;
+			if (add(fpOut, base, temp2, temp3, temp3)) return 1;
 		}
 
 		if (are_equal(temp4, aVal))
@@ -309,18 +312,20 @@ void divide(int base, int* aVal, int* bVal, int* result) {
 
 	for (i = 0; i < MAX_LENGTH; i++)
 		result[i] = resultTemp[i];
+    return 0;
 }
 
 
-void mod(int base, int* aVal, int* bVal, int* result) {
+int mod(FILE* fpOut, int base, int* aVal, int* bVal, int* result) {
 	int temp1[MAX_LENGTH] = { 0 };
 
 	if (are_equal(temp1, bVal)) {
-		printf("\nERROR 202: Modulo by zero\n");
-		exit(1);
+		fprintf(fpOut,"ERROR 202: Modulo by zero\n\n");
+		return 1;
 	}
 
-	divide(base, aVal, bVal, result);
-	multiply(base, result, bVal, result);
-	subtract(base, aVal, result, result);
+	if (divide(fpOut, base, aVal, bVal, result)) return 1;
+	if (multiply(fpOut, base, result, bVal, result)) return 1;
+	if (subtract(fpOut, base, aVal, result, result)) return 1;
+    return 0;
 }
