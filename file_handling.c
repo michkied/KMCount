@@ -153,7 +153,7 @@ char get_operation(FILE *fpIn, FILE *fpOut, int *operationBase, int *aVal, int *
                 value = symbol_to_value(buf[i], *operationBase);
                 if (value == -1) continue;
                 if (value == -2) {
-                    copy_data(fpIn, fpOut, 1);
+                    if (operationType != 'b') copy_data(fpIn, fpOut, 1);
                     fprintf(fpOut, "ERROR 130: Character %c is not valid in base %i\n\n", buf[i], *operationBase);
                     return 'E';
                 }
