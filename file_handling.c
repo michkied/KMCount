@@ -87,12 +87,12 @@ int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* ope
         *targetBase = base;
         *operationBase = base2;
         if (*targetBase > strlen(SYMBOLS) || *targetBase <= 1) {
-            skip_lines(fpIn, fpOut, 3);
+            copy_data(fpIn, fpOut, 1);
             fprintf(fpOut,"ERROR 123: Invalid target base - %i\n", *targetBase);
             return 1;
         }
         if (*operationBase > strlen(SYMBOLS) || *operationBase <= 1) {
-            skip_lines(fpIn, fpOut, 3);
+            copy_data(fpIn, fpOut, 1);
             fprintf(fpOut,"ERROR 121: Invalid operation base - %i\n\n", *operationBase);
             return 1;
         }
@@ -100,14 +100,14 @@ int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* ope
     }
 
     if (base > strlen(SYMBOLS) || base <= 1) {
-        skip_lines(fpIn, fpOut, 5);
+        copy_data(fpIn, fpOut, 2);
         fprintf(fpOut,"ERROR 121: Invalid operation base - %i\n\n", base);
         return 1;
     }
     *operationBase = base;
 
     if (buf[1] != ' ') {
-        skip_lines(fpIn, fpOut, 5);
+        copy_data(fpIn, fpOut, 2);
         fprintf(fpOut, "ERROR 122: Invalid operation type\n\n");
         return 1;
     }
@@ -119,86 +119,71 @@ int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* ope
         }
     }
 
-    skip_lines(fpIn, fpOut, 5);
+    copy_data(fpIn, fpOut, 2);
     fprintf(fpOut, "ERROR 122: Invalid operation type\n\n");
     return 1;
 }
 
 
 char get_operation(FILE *fpIn, FILE *fpOut, int *operationBase, int *aVal, int *bVal, int errNum, int opNum) {
-    int lineNum, i, value;
+    int i, value;
     int i2 = MAX_LENGTH - 1;
-    char operationType;
-    int finish = 0;
+    char operationType = 0;
+    int opCounter = 0;
     char buf[MAX_LENGTH + 3];
     int hasData = 0;
     memset(buf, '_', sizeof(buf));
 
-    for (lineNum=0; fgets(buf, MAX_LENGTH + 3, fpIn) != NULL; lineNum++) {
-        fprintf(fpOut, "%s", buf);
+    while (fgets(buf, MAX_LENGTH + 3, fpIn) != NULL) {
 
-        if (finish) return operationType;
-        if (lineNum > 4) break;
         if (buf[0] != '\n') hasData = 1; else continue;
 
+        fprintf(fpOut, "%s\n", buf);
+
         if (buf[MAX_LENGTH + 2] != '_') {
-            skip_lines(fpIn, fpOut, 6-lineNum);
-            fprintf(fpOut, "ERROR 110: Input line too long (max %i characters)\n\n", MAX_LENGTH);
-            return 'E';
+            printf("\nCRITICAL ERROR 110: Input line too long (max %i characters)\n", MAX_LENGTH);
+            exit(1);
         }
 
-        if (lineNum == 0) {
-             if (get_header(fpIn, fpOut, buf, &operationType, operationBase, &bVal[0])) {
+        if (opCounter == 0) {
+             if (get_header(fpIn, fpOut, buf, &operationType, operationBase, &bVal[0]))
                  return 'E';
-             };
-            continue;
         }
 
-        if (lineNum == 2) {
+        else if (opCounter == 1) {
             for (i = MAX_LENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase);
                 if (value == -1) continue;
                 if (value == -2) {
-                    skip_lines(fpIn, fpOut, (operationType=='b')?3-lineNum:5-lineNum);
+                    copy_data(fpIn, fpOut, 1);
                     fprintf(fpOut, "ERROR 130: Character %c is not valid in base %i\n\n", buf[i], *operationBase);
                     return 'E';
                 }
                 aVal[i2] = value;
                 i2--;
             }
-            if (operationType == 'b') {
-                finish = 1;
-                continue;
-            }
+            if (operationType == 'b') return operationType;
         }
 
-        if (lineNum == 4) {
+        else if (opCounter == 2) {
             i2 = MAX_LENGTH - 1;
             for (i = MAX_LENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase);
                 if (value == -1) continue;
                 if (value == -2) {
-                    skip_lines(fpIn, fpOut, (operationType=='b')?3-lineNum:5-lineNum);
                     fprintf(fpOut, "ERROR 130: Character %c is not valid in base %i\n\n", buf[i], *operationBase);
                     return 'E';
                 }
                 bVal[i2] = value;
                 i2--;
             }
-            finish = 1;
-            continue;
+            return operationType;
         }
-
+        opCounter++;
         memset(buf, '_', sizeof(buf));
     }
 
-    if (!hasData) {
-        if (errNum)
-            printf("\nFinished with %i non-critical error(s)\n", errNum);
-        else
-            printf("\nFinished with no errors\n");
-        exit(0);
-    }
+    if (!hasData) {if (errNum) return 1; else return 0;}
     printf("\nCRITICAL ERROR 111: Input format invalid (operation #%i)\n", opNum);
     exit(1);
 }
@@ -219,10 +204,13 @@ void output_result(FILE *fpOut, char* resultExpression) {
     fprintf(fpOut, "\n\n");
 }
 
-void skip_lines(FILE* fpIn, FILE* fpOut, int numOfLines) {
+
+void copy_data(FILE* fpIn, FILE* fpOut, int numOfLines) {
     char buf[MAX_LENGTH+3];
-    for (;numOfLines > 0; numOfLines--) {
-        fgets(buf, MAX_LENGTH + 3, fpIn);
-        fprintf(fpOut, "%s", buf);
+    while (numOfLines > 0) {
+        if (fgets(buf, MAX_LENGTH + 3, fpIn) == NULL) return;
+        if (buf[0] == '\n') continue;
+        fprintf(fpOut, "%s\n", buf);
+        numOfLines--;
     }
 }

@@ -7,4 +7,4 @@ char get_operation(FILE*, FILE*, int*, int*, int*, int, int);
 
 void output_result(FILE*, char*);
 
-void skip_lines(FILE*, FILE*, int);
+void copy_data(FILE*, FILE*, int);
