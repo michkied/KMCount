@@ -57,19 +57,16 @@ void get_io_files(char* fnamePath, FILE** fpIn, FILE** fpOut) {
 
 
 int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* operationBase, int* targetBase) {
-    int i = 0;
-    int base, base2 = 0;
+    int i = 0, hasSpace = 0;
+    int base = 0, base2 = 0;
     char opT[MAX_LENGTH];
 
     while (buf[i] != '\n' && buf[i] != EOF) {
-        if (buf[i] == ' ') {
-            if (buf[i+1] == '\n' || buf[i+1] == EOF)
-                i++;
-            break;
-        }
+        if (buf[i] == ' ') {hasSpace = 1;break;}
         i++;
     }
-    if (buf[i] == '\n' || buf[i] == EOF) {
+    if (!hasSpace) {
+        fprintf(fpOut,"!!! CRITICAL ERROR 120: Invalid header format !!!");
         printf("\nCRITICAL ERROR 120: Invalid header format\n");
         exit(1);
     }
@@ -141,6 +138,7 @@ char get_operation(FILE *fpIn, FILE *fpOut, int *operationBase, int *aVal, int *
         fprintf(fpOut, "%s\n", buf);
 
         if (buf[MAX_LENGTH + 2] != '_') {
+            fprintf(fpOut,"!!! CRITICAL ERROR 110: Input line too long (max %i characters) !!!", MAX_LENGTH);
             printf("\nCRITICAL ERROR 110: Input line too long (max %i characters)\n", MAX_LENGTH);
             exit(1);
         }
