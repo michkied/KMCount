@@ -44,12 +44,12 @@ void get_io_files(char* fnamePath, FILE** fpIn, FILE** fpOut) {
     fnameOut[4] = fnameIn[i+4];
 
     *fpIn = fopen(fnamePath, "r");
-    if (fpIn == NULL) {
+    if (*fpIn == NULL) {
         printf("\nCRITICAL ERROR 102: Unable to open input file - %s\n", fnamePath);
         exit(1);
     }
     *fpOut = fopen(fnameOut, "w");
-    if (fpOut == NULL) {
+    if (*fpOut == NULL) {
         printf("\nCRITICAL ERROR 103: Unable to create output file - %s\n", fnameOut);
         exit(1);
     }
