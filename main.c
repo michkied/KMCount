@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     int bVal[MAX_LENGTH] = { 0 };
     int result[MAX_LENGTH] = { 0 };
     char resultExpression[MAX_LENGTH];
-    int base, i, errNum = 0, opNum = 0;
+    int base, i, opNum = 0, errNum = 0;
     char opType;
 
     if (argc < 2) {
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
         memset(bVal, 0, sizeof(bVal));
 
         opNum++;
-        opType = get_operation(fpIn, fpOut, &base, aVal, bVal, errNum, opNum);
+        opType = get_operation(fpIn, fpOut, &base, aVal, bVal, &errNum, &opNum);
 
         switch (opType) {
             case 'b':

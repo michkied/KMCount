@@ -14,6 +14,16 @@ int is_digit(char character) {
 }
 
 
+int has_space(char* text) {
+    int i = 0;
+    while (text[i] != '\n' && text[i] != EOF) {
+        if (text[i] == ' ') return 1;
+        i++;
+    }
+    return 0;
+}
+
+
 void get_io_files(char* fnamePath, FILE** fpIn, FILE** fpOut) {
     unsigned int pathLen = strlen(fnamePath);
     char* fnameIn;
@@ -57,18 +67,13 @@ void get_io_files(char* fnamePath, FILE** fpIn, FILE** fpOut) {
 
 
 int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* operationBase, int* targetBase) {
-    int i = 0, hasSpace = 0;
+    int i;
     int base = 0, base2 = 0;
     char opT[MAX_LENGTH];
 
-    while (buf[i] != '\n' && buf[i] != EOF) {
-        if (buf[i] == ' ') {hasSpace = 1;break;}
-        i++;
-    }
-    if (!hasSpace) {
-        fprintf(fpOut,"!!! CRITICAL ERROR 120: Invalid header format !!!");
-        printf("\nCRITICAL ERROR 120: Invalid header format\n");
-        exit(1);
+    if (!has_space(buf)) {
+        fprintf(fpOut,"ERROR 120: Invalid header format\n\n");
+        return 1;
     }
 
     memset(opT, '_', sizeof(opT));
@@ -122,7 +127,7 @@ int get_header(FILE* fpIn, FILE* fpOut, char* buf, char* operationType, int* ope
 }
 
 
-char get_operation(FILE *fpIn, FILE *fpOut, int *operationBase, int *aVal, int *bVal, int errNum, int opNum) {
+char get_operation(FILE *fpIn, FILE *fpOut, int *operationBase, int *aVal, int *bVal, int *errNum, int *opNum) {
     int i, value;
     int i2 = MAX_LENGTH - 1;
     char operationType = 0;
@@ -135,20 +140,28 @@ char get_operation(FILE *fpIn, FILE *fpOut, int *operationBase, int *aVal, int *
 
         if (buf[0] != '\n') hasData = 1; else continue;
 
-        fprintf(fpOut, "%s\n", buf);
-
         if (buf[MAX_LENGTH + 2] != '_') {
+            fprintf(fpOut, "%s\n", buf);
             fprintf(fpOut,"!!! CRITICAL ERROR 110: Input line too long (max %i characters) !!!", MAX_LENGTH);
             printf("\nCRITICAL ERROR 110: Input line too long (max %i characters)\n", MAX_LENGTH);
             exit(1);
         }
+
+        if (has_space(buf) && opCounter) {
+            fprintf(fpOut, "ERROR 112: Missing argument(s)\n\n");
+            (*errNum)++;
+            (*opNum)++;
+            opCounter = 0;
+        }
+
+        fprintf(fpOut, "%s\n", buf);
 
         if (opCounter == 0) {
              if (get_header(fpIn, fpOut, buf, &operationType, operationBase, &bVal[0]))
                  return 'E';
         }
 
-        else if (opCounter == 1) {
+        if (opCounter == 1) {
             for (i = MAX_LENGTH; i >= 0; i--) {
                 value = symbol_to_value(buf[i], *operationBase);
                 if (value == -1) continue;
@@ -181,8 +194,8 @@ char get_operation(FILE *fpIn, FILE *fpOut, int *operationBase, int *aVal, int *
         memset(buf, '_', sizeof(buf));
     }
 
-    if (!hasData) {if (errNum) return 1; else return 0;}
-    printf("\nCRITICAL ERROR 111: Input format invalid (operation #%i)\n", opNum);
+    if (!hasData) {if (*errNum) return 1; else return 0;}
+    printf("\nCRITICAL ERROR 111: Input format invalid (operation #%i)\n", *opNum);
     exit(1);
 }
 
@@ -206,9 +219,17 @@ void output_result(FILE *fpOut, char* resultExpression) {
 void copy_data(FILE* fpIn, FILE* fpOut, int numOfLines) {
     char buf[MAX_LENGTH+3];
     while (numOfLines > 0) {
+        memset(buf, '_', sizeof(buf));
+
         if (fgets(buf, MAX_LENGTH + 3, fpIn) == NULL) return;
         if (buf[0] == '\n') continue;
+
         fprintf(fpOut, "%s\n", buf);
+        if (buf[MAX_LENGTH + 2] != '_') {
+            fprintf(fpOut,"!!! CRITICAL ERROR 110: Input line too long (max %i characters) !!!", MAX_LENGTH);
+            printf("\nCRITICAL ERROR 110: Input line too long (max %i characters)\n", MAX_LENGTH);
+            exit(1);
+        }
         numOfLines--;
     }
 }
